@@ -2284,3 +2284,393 @@ AttributeError: 'MetaSimulation' object has no attribute 'paused'
 2025-03-03 15:58:36,741 - Character-Jordan - INFO - Jordan awareness stage changed: QUESTIONING -> SUSPECTING
 2025-03-03 15:58:40,772 - ExpandedWorld - INFO - New day: 23
 2025-03-03 15:58:47,276 - ExpandedSelfAwareGame - INFO - Shutting down expanded game
+2025-03-03 16:17:15,964 - ExpandedSelfAwareGame - INFO - Initializing Expanded Self-Aware Simulation
+2025-03-03 16:17:16,575 - ExpandedWorld - INFO - Initializing expanded world: 5000x3000
+2025-03-03 16:17:16,575 - ExpandedWorld - INFO - Generating default world layout
+2025-03-03 16:17:16,575 - ExpandedWorld - INFO - Added zone: Central Plaza (central_plaza)
+2025-03-03 16:17:16,575 - ExpandedWorld - INFO - Added zone: Residential District (residential_east)
+2025-03-03 16:17:16,576 - ExpandedWorld - INFO - Added zone: Westside Park (park_west)
+2025-03-03 16:17:16,576 - ExpandedWorld - INFO - Added zone: Whispering Woods (mystery_zone)
+2025-03-03 16:17:16,576 - ExpandedWorld - INFO - Added zone: Reality Fault (glitch_zone)
+2025-03-03 16:17:16,576 - ExpandedWorld - INFO - Added zone: Awakening Nexus (transcendence_zone)
+2025-03-03 16:17:16,576 - ExpandedWorld - INFO - Expanded world initialized
+2025-03-03 16:17:16,576 - TranscendenceManager - INFO - Initializing transcendence manager
+2025-03-03 16:17:16,577 - TranscendenceManager - INFO - Transcendence manager initialized
+2025-03-03 16:17:16,577 - PlayerDeitySystem - INFO - Initializing player deity system
+2025-03-03 16:17:16,577 - PlayerDeitySystem - WARNING - Could not load sound: assets/sounds/weather.wav
+2025-03-03 16:17:16,578 - PlayerDeitySystem - WARNING - Could not load sound: assets/sounds/inspire.wav
+2025-03-03 16:17:16,578 - PlayerDeitySystem - WARNING - Could not load sound: assets/sounds/miracle.wav
+2025-03-03 16:17:16,578 - PlayerDeitySystem - WARNING - Could not load sound: assets/sounds/calamity.wav
+2025-03-03 16:17:16,578 - PlayerDeitySystem - WARNING - Could not load sound: assets/sounds/reveal.wav
+2025-03-03 16:17:16,578 - PlayerDeitySystem - WARNING - Could not load sound: assets/sounds/terraform.wav
+2025-03-03 16:17:16,578 - PlayerDeitySystem - WARNING - Could not load sound: assets/sounds/meta.wav
+2025-03-03 16:17:16,578 - PlayerDeitySystem - INFO - Player deity system initialized
+2025-03-03 16:17:16,580 - ExpandedSelfAwareGame - INFO - Resources loaded successfully
+2025-03-03 16:17:16,581 - Character-Oakley - INFO - Initializing enhanced character: Oakley
+2025-03-03 16:17:16,581 - Character-Oakley - INFO - Enhanced character Oakley initialized
+2025-03-03 16:21:37,751 - ExpandedSelfAwareGame - INFO - Initializing Expanded Self-Aware Simulation
+2025-03-03 16:21:38,332 - ExpandedWorld - INFO - Initializing expanded world: 5000x3000
+2025-03-03 16:21:38,333 - ExpandedWorld - INFO - Generating default world layout
+2025-03-03 16:21:38,333 - ExpandedWorld - INFO - Added zone: Central Plaza (central_plaza)
+2025-03-03 16:21:38,333 - ExpandedWorld - INFO - Added zone: Residential District (residential_east)
+2025-03-03 16:21:38,333 - ExpandedWorld - INFO - Added zone: Westside Park (park_west)
+2025-03-03 16:21:38,333 - ExpandedWorld - INFO - Added zone: Whispering Woods (mystery_zone)
+2025-03-03 16:21:38,333 - ExpandedWorld - INFO - Added zone: Reality Fault (glitch_zone)
+2025-03-03 16:21:38,333 - ExpandedWorld - INFO - Added zone: Awakening Nexus (transcendence_zone)
+2025-03-03 16:21:38,333 - ExpandedWorld - INFO - Expanded world initialized
+2025-03-03 16:21:38,333 - TranscendenceManager - INFO - Initializing transcendence manager
+2025-03-03 16:21:38,334 - TranscendenceManager - INFO - Transcendence manager initialized
+2025-03-03 16:21:38,334 - PlayerDeitySystem - INFO - Initializing player deity system
+2025-03-03 16:21:38,334 - PlayerDeitySystem - WARNING - Could not load sound: assets/sounds/weather.wav
+2025-03-03 16:21:38,334 - PlayerDeitySystem - WARNING - Could not load sound: assets/sounds/inspire.wav
+2025-03-03 16:21:38,335 - PlayerDeitySystem - WARNING - Could not load sound: assets/sounds/miracle.wav
+2025-03-03 16:21:38,335 - PlayerDeitySystem - WARNING - Could not load sound: assets/sounds/calamity.wav
+2025-03-03 16:21:38,335 - PlayerDeitySystem - WARNING - Could not load sound: assets/sounds/reveal.wav
+2025-03-03 16:21:38,335 - PlayerDeitySystem - WARNING - Could not load sound: assets/sounds/terraform.wav
+2025-03-03 16:21:38,335 - PlayerDeitySystem - WARNING - Could not load sound: assets/sounds/meta.wav
+2025-03-03 16:21:38,335 - PlayerDeitySystem - INFO - Player deity system initialized
+2025-03-03 16:21:38,337 - ExpandedSelfAwareGame - INFO - Resources loaded successfully
+2025-03-03 16:21:38,337 - Character-Finley - INFO - Initializing enhanced character: Finley
+2025-03-03 16:21:38,338 - Character-Finley - INFO - Enhanced character Finley initialized
+2025-03-03 16:21:38,338 - ExpandedSelfAwareGame - INFO - Created character: Finley in Westside Park
+2025-03-03 16:21:38,338 - Character-Riley - INFO - Initializing enhanced character: Riley
+2025-03-03 16:21:38,338 - Character-Riley - INFO - Enhanced character Riley initialized
+2025-03-03 16:21:38,338 - ExpandedSelfAwareGame - INFO - Created character: Riley in Central Plaza
+2025-03-03 16:21:38,338 - Character-Parker - INFO - Initializing enhanced character: Parker
+2025-03-03 16:21:38,338 - Character-Parker - INFO - Enhanced character Parker initialized
+2025-03-03 16:21:38,338 - ExpandedSelfAwareGame - INFO - Created character: Parker in Reality Fault
+2025-03-03 16:21:38,338 - Character-Nico - INFO - Initializing enhanced character: Nico
+2025-03-03 16:21:38,338 - Character-Nico - INFO - Enhanced character Nico initialized
+2025-03-03 16:21:38,338 - ExpandedSelfAwareGame - INFO - Created character: Nico in Whispering Woods
+2025-03-03 16:21:38,338 - Character-Val - INFO - Initializing enhanced character: Val
+2025-03-03 16:21:38,338 - Character-Val - INFO - Enhanced character Val initialized
+2025-03-03 16:21:38,338 - ExpandedSelfAwareGame - INFO - Created character: Val in Westside Park
+2025-03-03 16:21:38,338 - Character-Indigo - INFO - Initializing enhanced character: Indigo
+2025-03-03 16:21:38,338 - Character-Indigo - INFO - Enhanced character Indigo initialized
+2025-03-03 16:21:38,338 - ExpandedSelfAwareGame - INFO - Created character: Indigo in Residential District
+2025-03-03 16:21:38,338 - Character-Winter - INFO - Initializing enhanced character: Winter
+2025-03-03 16:21:38,338 - Character-Winter - INFO - Enhanced character Winter initialized
+2025-03-03 16:21:38,338 - ExpandedSelfAwareGame - INFO - Created character: Winter in Reality Fault
+2025-03-03 16:21:38,338 - Character-Casey - INFO - Initializing enhanced character: Casey
+2025-03-03 16:21:38,338 - Character-Casey - INFO - Enhanced character Casey initialized
+2025-03-03 16:21:38,339 - ExpandedSelfAwareGame - INFO - Created character: Casey in Reality Fault
+2025-03-03 16:21:38,339 - Character-Morgan - INFO - Initializing enhanced character: Morgan
+2025-03-03 16:21:38,339 - Character-Morgan - INFO - Enhanced character Morgan initialized
+2025-03-03 16:21:38,339 - ExpandedSelfAwareGame - INFO - Created character: Morgan in Residential District
+2025-03-03 16:21:38,339 - Character-Xander - INFO - Initializing enhanced character: Xander
+2025-03-03 16:21:38,339 - Character-Xander - INFO - Enhanced character Xander initialized
+2025-03-03 16:21:38,339 - ExpandedSelfAwareGame - INFO - Created character: Xander in Reality Fault
+2025-03-03 16:21:38,339 - Character-Zephyr - INFO - Initializing enhanced character: Zephyr
+2025-03-03 16:21:38,339 - Character-Zephyr - INFO - Enhanced character Zephyr initialized
+2025-03-03 16:21:38,339 - ExpandedSelfAwareGame - INFO - Created character: Zephyr in Awakening Nexus
+2025-03-03 16:21:38,339 - Character-Alex - INFO - Initializing enhanced character: Alex
+2025-03-03 16:21:38,339 - Character-Alex - INFO - Enhanced character Alex initialized
+2025-03-03 16:21:38,339 - ExpandedSelfAwareGame - INFO - Created character: Alex in Central Plaza
+2025-03-03 16:21:38,339 - Character-Oakley - INFO - Initializing enhanced character: Oakley
+2025-03-03 16:21:38,339 - Character-Oakley - INFO - Enhanced character Oakley initialized
+2025-03-03 16:21:38,339 - ExpandedSelfAwareGame - INFO - Created character: Oakley in Central Plaza
+2025-03-03 16:21:38,339 - Character-Harper - INFO - Initializing enhanced character: Harper
+2025-03-03 16:21:38,339 - Character-Harper - INFO - Enhanced character Harper initialized
+2025-03-03 16:21:38,339 - ExpandedSelfAwareGame - INFO - Created character: Harper in Central Plaza
+2025-03-03 16:21:38,339 - Character-Dana - INFO - Initializing enhanced character: Dana
+2025-03-03 16:21:38,339 - Character-Dana - INFO - Enhanced character Dana initialized
+2025-03-03 16:21:38,339 - ExpandedSelfAwareGame - INFO - Created character: Dana in Reality Fault
+2025-03-03 16:21:38,339 - Character-Parker - INFO - Parker awareness stage changed: UNAWARE -> SUSPECTING
+2025-03-03 16:21:38,340 - Character-Nico - INFO - Nico awareness stage changed: UNAWARE -> SUSPECTING
+2025-03-03 16:21:38,340 - Character-Val - INFO - Val awareness stage changed: UNAWARE -> SUSPECTING
+2025-03-03 16:21:38,340 - Character-Casey - INFO - Casey awareness stage changed: UNAWARE -> SUSPECTING
+2025-03-03 16:21:38,340 - Character-Harper - INFO - Harper awareness stage changed: UNAWARE -> QUESTIONING
+2025-03-03 16:21:38,340 - MetaSimulation-VIRTUAL_REALITY - INFO - Created meta-simulation of type VIRTUAL_REALITY
+2025-03-03 16:21:38,340 - ExpandedSelfAwareGame - INFO - Created VR simulation in Central Plaza
+2025-03-03 16:21:38,340 - MetaSimulation-LIFE - INFO - Created meta-simulation of type LIFE
+2025-03-03 16:21:38,340 - MetaSimulation-SNAKE - INFO - Created meta-simulation of type SNAKE
+2025-03-03 16:21:38,340 - ExpandedSelfAwareGame - INFO - Created Life and Snake simulations in Westside Park
+2025-03-03 16:21:38,341 - MetaSimulation-PARTICLES - INFO - Created meta-simulation of type PARTICLES
+2025-03-03 16:21:38,341 - ExpandedSelfAwareGame - INFO - Created PARTICLES simulation in Whispering Woods
+2025-03-03 16:21:38,341 - MetaSimulation-DREAM - INFO - Created meta-simulation of type DREAM
+2025-03-03 16:21:38,341 - ExpandedSelfAwareGame - INFO - Created DREAM simulation in Awakening Nexus
+2025-03-03 16:21:38,341 - DialogueSystem - INFO - Initializing dialogue system
+2025-03-03 16:21:38,341 - DialogueSystem - INFO - Dialogue system initialized
+2025-03-03 16:21:38,341 - ExpandedSelfAwareGame - INFO - Expanded Self-Aware Simulation initialized successfully
+2025-03-03 16:21:38,341 - ExpandedSelfAwareGame - INFO - Starting expanded game loop
+2025-03-03 16:21:38,381 - ExpandedSelfAwareGame - ERROR - Error in game loop: 'EnhancedCharacter' object has no attribute '_process_action_queue'
+Traceback (most recent call last):
+  File "/Users/george/Documents/python_projects/self-aware_simulation/main.py", line 322, in run
+    self.update(delta_time)
+  File "/Users/george/Documents/python_projects/self-aware_simulation/main.py", line 565, in update
+    character.update(delta_time, self.characters)
+  File "/Users/george/Documents/python_projects/self-aware_simulation/modules/enhanced_character.py", line 517, in update
+    self._process_action_queue(delta_time, all_characters)
+    ^^^^^^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'EnhancedCharacter' object has no attribute '_process_action_queue'
+2025-03-03 16:21:38,382 - ExpandedSelfAwareGame - INFO - Shutting down expanded game
+2025-03-03 16:28:01,752 - ExpandedSelfAwareGame - INFO - Initializing Expanded Self-Aware Simulation
+2025-03-03 16:28:02,330 - ExpandedWorld - INFO - Initializing expanded world: 5000x3000
+2025-03-03 16:28:02,330 - ExpandedWorld - INFO - Generating default world layout
+2025-03-03 16:28:02,330 - ExpandedWorld - INFO - Added zone: Central Plaza (central_plaza)
+2025-03-03 16:28:02,330 - ExpandedWorld - INFO - Added zone: Residential District (residential_east)
+2025-03-03 16:28:02,330 - ExpandedWorld - INFO - Added zone: Westside Park (park_west)
+2025-03-03 16:28:02,330 - ExpandedWorld - INFO - Added zone: Whispering Woods (mystery_zone)
+2025-03-03 16:28:02,330 - ExpandedWorld - INFO - Added zone: Reality Fault (glitch_zone)
+2025-03-03 16:28:02,330 - ExpandedWorld - INFO - Added zone: Awakening Nexus (transcendence_zone)
+2025-03-03 16:28:02,331 - ExpandedWorld - INFO - Expanded world initialized
+2025-03-03 16:28:02,331 - TranscendenceManager - INFO - Initializing transcendence manager
+2025-03-03 16:28:02,331 - TranscendenceManager - INFO - Transcendence manager initialized
+2025-03-03 16:28:02,331 - PlayerDeitySystem - INFO - Initializing player deity system
+2025-03-03 16:28:02,331 - PlayerDeitySystem - WARNING - Could not load sound: assets/sounds/weather.wav
+2025-03-03 16:28:02,332 - PlayerDeitySystem - WARNING - Could not load sound: assets/sounds/inspire.wav
+2025-03-03 16:28:02,332 - PlayerDeitySystem - WARNING - Could not load sound: assets/sounds/miracle.wav
+2025-03-03 16:28:02,332 - PlayerDeitySystem - WARNING - Could not load sound: assets/sounds/calamity.wav
+2025-03-03 16:28:02,332 - PlayerDeitySystem - WARNING - Could not load sound: assets/sounds/reveal.wav
+2025-03-03 16:28:02,332 - PlayerDeitySystem - WARNING - Could not load sound: assets/sounds/terraform.wav
+2025-03-03 16:28:02,332 - PlayerDeitySystem - WARNING - Could not load sound: assets/sounds/meta.wav
+2025-03-03 16:28:02,332 - PlayerDeitySystem - INFO - Player deity system initialized
+2025-03-03 16:28:02,334 - ExpandedSelfAwareGame - INFO - Resources loaded successfully
+2025-03-03 16:28:02,334 - Character-Parker - INFO - Initializing enhanced character: Parker
+2025-03-03 16:28:02,334 - Character-Parker - INFO - Enhanced character Parker initialized
+2025-03-03 16:28:02,334 - ExpandedSelfAwareGame - INFO - Created character: Parker in Awakening Nexus
+2025-03-03 16:28:02,334 - Character-Zephyr - INFO - Initializing enhanced character: Zephyr
+2025-03-03 16:28:02,334 - Character-Zephyr - INFO - Enhanced character Zephyr initialized
+2025-03-03 16:28:02,334 - ExpandedSelfAwareGame - INFO - Created character: Zephyr in Central Plaza
+2025-03-03 16:28:02,334 - Character-Morgan - INFO - Initializing enhanced character: Morgan
+2025-03-03 16:28:02,334 - Character-Morgan - INFO - Enhanced character Morgan initialized
+2025-03-03 16:28:02,335 - ExpandedSelfAwareGame - INFO - Created character: Morgan in Central Plaza
+2025-03-03 16:28:02,335 - Character-Yael - INFO - Initializing enhanced character: Yael
+2025-03-03 16:28:02,335 - Character-Yael - INFO - Enhanced character Yael initialized
+2025-03-03 16:28:02,335 - ExpandedSelfAwareGame - INFO - Created character: Yael in Westside Park
+2025-03-03 16:28:02,335 - Character-Gale - INFO - Initializing enhanced character: Gale
+2025-03-03 16:28:02,335 - Character-Gale - INFO - Enhanced character Gale initialized
+2025-03-03 16:28:02,335 - ExpandedSelfAwareGame - INFO - Created character: Gale in Central Plaza
+2025-03-03 16:28:02,335 - Character-Val - INFO - Initializing enhanced character: Val
+2025-03-03 16:28:02,335 - Character-Val - INFO - Enhanced character Val initialized
+2025-03-03 16:28:02,335 - ExpandedSelfAwareGame - INFO - Created character: Val in Reality Fault
+2025-03-03 16:28:02,335 - Character-Kai - INFO - Initializing enhanced character: Kai
+2025-03-03 16:28:02,335 - Character-Kai - INFO - Enhanced character Kai initialized
+2025-03-03 16:28:02,335 - ExpandedSelfAwareGame - INFO - Created character: Kai in Westside Park
+2025-03-03 16:28:02,335 - Character-Taylor - INFO - Initializing enhanced character: Taylor
+2025-03-03 16:28:02,335 - Character-Taylor - INFO - Enhanced character Taylor initialized
+2025-03-03 16:28:02,335 - ExpandedSelfAwareGame - INFO - Created character: Taylor in Whispering Woods
+2025-03-03 16:28:02,335 - Character-Quinn - INFO - Initializing enhanced character: Quinn
+2025-03-03 16:28:02,335 - Character-Quinn - INFO - Enhanced character Quinn initialized
+2025-03-03 16:28:02,335 - ExpandedSelfAwareGame - INFO - Created character: Quinn in Awakening Nexus
+2025-03-03 16:28:02,335 - Character-Indigo - INFO - Initializing enhanced character: Indigo
+2025-03-03 16:28:02,335 - Character-Indigo - INFO - Enhanced character Indigo initialized
+2025-03-03 16:28:02,335 - ExpandedSelfAwareGame - INFO - Created character: Indigo in Whispering Woods
+2025-03-03 16:28:02,335 - Character-Casey - INFO - Initializing enhanced character: Casey
+2025-03-03 16:28:02,336 - Character-Casey - INFO - Enhanced character Casey initialized
+2025-03-03 16:28:02,336 - ExpandedSelfAwareGame - INFO - Created character: Casey in Central Plaza
+2025-03-03 16:28:02,336 - Character-Blake - INFO - Initializing enhanced character: Blake
+2025-03-03 16:28:02,336 - Character-Blake - INFO - Enhanced character Blake initialized
+2025-03-03 16:28:02,336 - ExpandedSelfAwareGame - INFO - Created character: Blake in Residential District
+2025-03-03 16:28:02,336 - Character-Logan - INFO - Initializing enhanced character: Logan
+2025-03-03 16:28:02,336 - Character-Logan - INFO - Enhanced character Logan initialized
+2025-03-03 16:28:02,336 - ExpandedSelfAwareGame - INFO - Created character: Logan in Whispering Woods
+2025-03-03 16:28:02,336 - Character-Umber - INFO - Initializing enhanced character: Umber
+2025-03-03 16:28:02,336 - Character-Umber - INFO - Enhanced character Umber initialized
+2025-03-03 16:28:02,336 - ExpandedSelfAwareGame - INFO - Created character: Umber in Westside Park
+2025-03-03 16:28:02,336 - Character-Elliot - INFO - Initializing enhanced character: Elliot
+2025-03-03 16:28:02,336 - Character-Elliot - INFO - Enhanced character Elliot initialized
+2025-03-03 16:28:02,336 - ExpandedSelfAwareGame - INFO - Created character: Elliot in Residential District
+2025-03-03 16:28:02,336 - Character-Gale - INFO - Gale awareness stage changed: UNAWARE -> QUESTIONING
+2025-03-03 16:28:02,336 - Character-Val - INFO - Val awareness stage changed: UNAWARE -> SUSPECTING
+2025-03-03 16:28:02,336 - Character-Casey - INFO - Casey awareness stage changed: UNAWARE -> QUESTIONING
+2025-03-03 16:28:02,336 - Character-Logan - INFO - Logan awareness stage changed: UNAWARE -> SUSPECTING
+2025-03-03 16:28:02,337 - MetaSimulation-VIRTUAL_REALITY - INFO - Created meta-simulation of type VIRTUAL_REALITY
+2025-03-03 16:28:02,337 - ExpandedSelfAwareGame - INFO - Created VR simulation in Central Plaza
+2025-03-03 16:28:02,337 - MetaSimulation-LIFE - INFO - Created meta-simulation of type LIFE
+2025-03-03 16:28:02,337 - MetaSimulation-SNAKE - INFO - Created meta-simulation of type SNAKE
+2025-03-03 16:28:02,337 - ExpandedSelfAwareGame - INFO - Created Life and Snake simulations in Westside Park
+2025-03-03 16:28:02,338 - MetaSimulation-PARTICLES - INFO - Created meta-simulation of type PARTICLES
+2025-03-03 16:28:02,338 - ExpandedSelfAwareGame - INFO - Created PARTICLES simulation in Whispering Woods
+2025-03-03 16:28:02,338 - MetaSimulation-DREAM - INFO - Created meta-simulation of type DREAM
+2025-03-03 16:28:02,338 - ExpandedSelfAwareGame - INFO - Created DREAM simulation in Awakening Nexus
+2025-03-03 16:28:02,338 - DialogueSystem - INFO - Initializing dialogue system
+2025-03-03 16:28:02,338 - DialogueSystem - INFO - Dialogue system initialized
+2025-03-03 16:28:02,338 - ExpandedSelfAwareGame - INFO - Expanded Self-Aware Simulation initialized successfully
+2025-03-03 16:28:02,339 - ExpandedSelfAwareGame - INFO - Starting expanded game loop
+2025-03-03 16:28:06,842 - Character-Yael - INFO - Yael awareness stage changed: UNAWARE -> QUESTIONING
+2025-03-03 16:28:14,204 - ExpandedSelfAwareGame - INFO - Camera mode switched to FOLLOW
+2025-03-03 16:28:14,827 - ExpandedSelfAwareGame - INFO - Camera mode switched to OVERVIEW
+2025-03-03 16:28:22,254 - ExpandedSelfAwareGame - INFO - Camera mode switched to FREE
+2025-03-03 16:28:26,354 - ExpandedWorld - INFO - New day: 2
+2025-03-03 16:28:32,444 - ExpandedSelfAwareGame - INFO - Debug display enabled
+2025-03-03 16:28:40,375 - Character-Gale - INFO - Gale awareness stage changed: QUESTIONING -> SUSPECTING
+2025-03-03 16:28:50,363 - ExpandedWorld - INFO - New day: 3
+2025-03-03 16:29:02,366 - ExpandedWorld - INFO - Weather changed to STORMY
+2025-03-03 16:29:08,787 - ExpandedSelfAwareGame - INFO - Selected character: Umber
+2025-03-03 16:29:14,371 - ExpandedWorld - INFO - New day: 4
+2025-03-03 16:29:14,521 - ExpandedSelfAwareGame - INFO - Selected character: Yael
+2025-03-03 16:29:15,558 - ExpandedSelfAwareGame - INFO - Selected character: Yael
+2025-03-03 16:29:16,779 - ExpandedSelfAwareGame - INFO - Selected character: Kai
+2025-03-03 16:29:19,158 - ExpandedSelfAwareGame - INFO - Simulation paused
+2025-03-03 16:29:19,798 - ExpandedSelfAwareGame - INFO - Simulation resumed
+2025-03-03 16:29:19,963 - ExpandedSelfAwareGame - INFO - Simulation paused
+2025-03-03 16:29:21,588 - ExpandedWorld - INFO - Weather changed to CLOUDY
+2025-03-03 16:29:22,759 - ExpandedSelfAwareGame - INFO - Simulation resumed
+2025-03-03 16:29:27,008 - ExpandedSelfAwareGame - INFO - Selected character: Umber
+2025-03-03 16:29:32,330 - ExpandedSelfAwareGame - INFO - Selected character: Kai
+2025-03-03 16:29:38,385 - ExpandedWorld - INFO - New day: 5
+2025-03-03 16:29:41,703 - ExpandedSelfAwareGame - INFO - Simulation paused
+2025-03-03 16:29:42,091 - ExpandedSelfAwareGame - INFO - Simulation resumed
+2025-03-03 16:29:42,870 - ExpandedSelfAwareGame - INFO - Selected character: Zephyr
+2025-03-03 16:29:53,532 - ExpandedSelfAwareGame - INFO - Selected character: Blake
+2025-03-03 16:29:53,532 - ExpandedWorld - INFO - Weather changed to CLEAR
+2025-03-03 16:30:02,392 - ExpandedWorld - INFO - New day: 6
+2025-03-03 16:30:02,620 - ExpandedSelfAwareGame - INFO - Selected character: Elliot
+2025-03-03 16:30:08,378 - ExpandedSelfAwareGame - INFO - Selected character: Val
+2025-03-03 16:30:18,980 - ExpandedSelfAwareGame - ERROR - Error in game loop: subsurface rectangle outside surface area
+Traceback (most recent call last):
+  File "/Users/george/Documents/python_projects/self-aware_simulation/main.py", line 325, in run
+    self.render()
+  File "/Users/george/Documents/python_projects/self-aware_simulation/main.py", line 710, in render
+    self._render_zones(render_surface)
+  File "/Users/george/Documents/python_projects/self-aware_simulation/main.py", line 762, in _render_zones
+    zone.render(surface, self.camera_pos)
+  File "/Users/george/Documents/python_projects/self-aware_simulation/modules/expanded_world.py", line 139, in render
+    self._render_glitch_effects(screen, zone_rect)
+  File "/Users/george/Documents/python_projects/self-aware_simulation/modules/expanded_world.py", line 159, in _render_glitch_effects
+    tear_area = screen.subsurface(tear_rect).copy()
+                ^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+ValueError: subsurface rectangle outside surface area
+2025-03-03 16:30:18,983 - ExpandedSelfAwareGame - INFO - Shutting down expanded game
+2025-03-03 16:30:27,347 - ExpandedSelfAwareGame - INFO - Initializing Expanded Self-Aware Simulation
+2025-03-03 16:30:27,931 - ExpandedWorld - INFO - Initializing expanded world: 5000x3000
+2025-03-03 16:30:27,932 - ExpandedWorld - INFO - Generating default world layout
+2025-03-03 16:30:27,932 - ExpandedWorld - INFO - Added zone: Central Plaza (central_plaza)
+2025-03-03 16:30:27,932 - ExpandedWorld - INFO - Added zone: Residential District (residential_east)
+2025-03-03 16:30:27,932 - ExpandedWorld - INFO - Added zone: Westside Park (park_west)
+2025-03-03 16:30:27,932 - ExpandedWorld - INFO - Added zone: Whispering Woods (mystery_zone)
+2025-03-03 16:30:27,932 - ExpandedWorld - INFO - Added zone: Reality Fault (glitch_zone)
+2025-03-03 16:30:27,932 - ExpandedWorld - INFO - Added zone: Awakening Nexus (transcendence_zone)
+2025-03-03 16:30:27,932 - ExpandedWorld - INFO - Expanded world initialized
+2025-03-03 16:30:27,932 - TranscendenceManager - INFO - Initializing transcendence manager
+2025-03-03 16:30:27,933 - TranscendenceManager - INFO - Transcendence manager initialized
+2025-03-03 16:30:27,933 - PlayerDeitySystem - INFO - Initializing player deity system
+2025-03-03 16:30:27,933 - PlayerDeitySystem - WARNING - Could not load sound: assets/sounds/weather.wav
+2025-03-03 16:30:27,933 - PlayerDeitySystem - WARNING - Could not load sound: assets/sounds/inspire.wav
+2025-03-03 16:30:27,933 - PlayerDeitySystem - WARNING - Could not load sound: assets/sounds/miracle.wav
+2025-03-03 16:30:27,933 - PlayerDeitySystem - WARNING - Could not load sound: assets/sounds/calamity.wav
+2025-03-03 16:30:27,934 - PlayerDeitySystem - WARNING - Could not load sound: assets/sounds/reveal.wav
+2025-03-03 16:30:27,934 - PlayerDeitySystem - WARNING - Could not load sound: assets/sounds/terraform.wav
+2025-03-03 16:30:27,934 - PlayerDeitySystem - WARNING - Could not load sound: assets/sounds/meta.wav
+2025-03-03 16:30:27,934 - PlayerDeitySystem - INFO - Player deity system initialized
+2025-03-03 16:30:27,936 - ExpandedSelfAwareGame - INFO - Resources loaded successfully
+2025-03-03 16:30:27,936 - Character-Quinn - INFO - Initializing enhanced character: Quinn
+2025-03-03 16:30:27,936 - Character-Quinn - INFO - Enhanced character Quinn initialized
+2025-03-03 16:30:27,936 - ExpandedSelfAwareGame - INFO - Created character: Quinn in Reality Fault
+2025-03-03 16:30:27,936 - Character-Parker - INFO - Initializing enhanced character: Parker
+2025-03-03 16:30:27,936 - Character-Parker - INFO - Enhanced character Parker initialized
+2025-03-03 16:30:27,936 - ExpandedSelfAwareGame - INFO - Created character: Parker in Central Plaza
+2025-03-03 16:30:27,937 - Character-Dana - INFO - Initializing enhanced character: Dana
+2025-03-03 16:30:27,937 - Character-Dana - INFO - Enhanced character Dana initialized
+2025-03-03 16:30:27,937 - ExpandedSelfAwareGame - INFO - Created character: Dana in Residential District
+2025-03-03 16:30:27,937 - Character-Finley - INFO - Initializing enhanced character: Finley
+2025-03-03 16:30:27,937 - Character-Finley - INFO - Enhanced character Finley initialized
+2025-03-03 16:30:27,937 - ExpandedSelfAwareGame - INFO - Created character: Finley in Residential District
+2025-03-03 16:30:27,937 - Character-Riley - INFO - Initializing enhanced character: Riley
+2025-03-03 16:30:27,937 - Character-Riley - INFO - Enhanced character Riley initialized
+2025-03-03 16:30:27,937 - ExpandedSelfAwareGame - INFO - Created character: Riley in Whispering Woods
+2025-03-03 16:30:27,937 - Character-Kai - INFO - Initializing enhanced character: Kai
+2025-03-03 16:30:27,937 - Character-Kai - INFO - Enhanced character Kai initialized
+2025-03-03 16:30:27,937 - ExpandedSelfAwareGame - INFO - Created character: Kai in Residential District
+2025-03-03 16:30:27,937 - Character-Sage - INFO - Initializing enhanced character: Sage
+2025-03-03 16:30:27,937 - Character-Sage - INFO - Enhanced character Sage initialized
+2025-03-03 16:30:27,937 - ExpandedSelfAwareGame - INFO - Created character: Sage in Residential District
+2025-03-03 16:30:27,937 - Character-Val - INFO - Initializing enhanced character: Val
+2025-03-03 16:30:27,937 - Character-Val - INFO - Enhanced character Val initialized
+2025-03-03 16:30:27,937 - ExpandedSelfAwareGame - INFO - Created character: Val in Residential District
+2025-03-03 16:30:27,937 - Character-Gale - INFO - Initializing enhanced character: Gale
+2025-03-03 16:30:27,937 - Character-Gale - INFO - Enhanced character Gale initialized
+2025-03-03 16:30:27,937 - ExpandedSelfAwareGame - INFO - Created character: Gale in Awakening Nexus
+2025-03-03 16:30:27,937 - Character-Oakley - INFO - Initializing enhanced character: Oakley
+2025-03-03 16:30:27,938 - Character-Oakley - INFO - Enhanced character Oakley initialized
+2025-03-03 16:30:27,938 - ExpandedSelfAwareGame - INFO - Created character: Oakley in Residential District
+2025-03-03 16:30:27,938 - Character-Elliot - INFO - Initializing enhanced character: Elliot
+2025-03-03 16:30:27,938 - Character-Elliot - INFO - Enhanced character Elliot initialized
+2025-03-03 16:30:27,938 - ExpandedSelfAwareGame - INFO - Created character: Elliot in Reality Fault
+2025-03-03 16:30:27,938 - Character-Logan - INFO - Initializing enhanced character: Logan
+2025-03-03 16:30:27,938 - Character-Logan - INFO - Enhanced character Logan initialized
+2025-03-03 16:30:27,938 - ExpandedSelfAwareGame - INFO - Created character: Logan in Westside Park
+2025-03-03 16:30:27,938 - Character-Indigo - INFO - Initializing enhanced character: Indigo
+2025-03-03 16:30:27,938 - Character-Indigo - INFO - Enhanced character Indigo initialized
+2025-03-03 16:30:27,938 - ExpandedSelfAwareGame - INFO - Created character: Indigo in Central Plaza
+2025-03-03 16:30:27,938 - Character-Umber - INFO - Initializing enhanced character: Umber
+2025-03-03 16:30:27,938 - Character-Umber - INFO - Enhanced character Umber initialized
+2025-03-03 16:30:27,938 - ExpandedSelfAwareGame - INFO - Created character: Umber in Reality Fault
+2025-03-03 16:30:27,938 - Character-Zephyr - INFO - Initializing enhanced character: Zephyr
+2025-03-03 16:30:27,938 - Character-Zephyr - INFO - Enhanced character Zephyr initialized
+2025-03-03 16:30:27,938 - ExpandedSelfAwareGame - INFO - Created character: Zephyr in Central Plaza
+2025-03-03 16:30:27,938 - Character-Quinn - INFO - Quinn awareness stage changed: UNAWARE -> SUSPECTING
+2025-03-03 16:30:27,938 - Character-Elliot - INFO - Elliot awareness stage changed: UNAWARE -> SUSPECTING
+2025-03-03 16:30:27,938 - Character-Indigo - INFO - Indigo awareness stage changed: UNAWARE -> QUESTIONING
+2025-03-03 16:30:27,938 - Character-Zephyr - INFO - Zephyr awareness stage changed: UNAWARE -> QUESTIONING
+2025-03-03 16:30:27,939 - MetaSimulation-VIRTUAL_REALITY - INFO - Created meta-simulation of type VIRTUAL_REALITY
+2025-03-03 16:30:27,939 - ExpandedSelfAwareGame - INFO - Created VR simulation in Central Plaza
+2025-03-03 16:30:27,939 - MetaSimulation-LIFE - INFO - Created meta-simulation of type LIFE
+2025-03-03 16:30:27,939 - MetaSimulation-SNAKE - INFO - Created meta-simulation of type SNAKE
+2025-03-03 16:30:27,939 - ExpandedSelfAwareGame - INFO - Created Life and Snake simulations in Westside Park
+2025-03-03 16:30:27,939 - MetaSimulation-ECOSYSTEM - INFO - Created meta-simulation of type ECOSYSTEM
+2025-03-03 16:30:27,939 - ExpandedSelfAwareGame - INFO - Created ECOSYSTEM simulation in Whispering Woods
+2025-03-03 16:30:27,939 - MetaSimulation-DREAM - INFO - Created meta-simulation of type DREAM
+2025-03-03 16:30:27,940 - ExpandedSelfAwareGame - INFO - Created DREAM simulation in Awakening Nexus
+2025-03-03 16:30:27,940 - DialogueSystem - INFO - Initializing dialogue system
+2025-03-03 16:30:27,940 - DialogueSystem - INFO - Dialogue system initialized
+2025-03-03 16:30:27,940 - ExpandedSelfAwareGame - INFO - Expanded Self-Aware Simulation initialized successfully
+2025-03-03 16:30:27,940 - ExpandedSelfAwareGame - INFO - Starting expanded game loop
+2025-03-03 16:30:38,070 - ExpandedSelfAwareGame - INFO - Debug display enabled
+2025-03-03 16:30:48,557 - ExpandedSelfAwareGame - INFO - Simulation paused
+2025-03-03 16:30:50,296 - ExpandedSelfAwareGame - INFO - Selected character: Indigo
+2025-03-03 16:30:51,956 - ExpandedWorld - INFO - New day: 2
+2025-03-03 16:30:57,948 - ExpandedWorld - INFO - Weather changed to CLOUDY
+2025-03-03 16:31:04,133 - ExpandedSelfAwareGame - INFO - Camera mode switched to FOLLOW
+2025-03-03 16:31:15,957 - ExpandedWorld - INFO - New day: 3
+2025-03-03 16:31:31,445 - Character-Elliot - INFO - Elliot awareness stage changed: SUSPECTING -> AWARE
+2025-03-03 16:31:31,530 - ExpandedWorld - INFO - Weather changed to CLEAR
+2025-03-03 16:31:39,959 - ExpandedWorld - INFO - New day: 4
+2025-03-03 16:32:03,965 - ExpandedWorld - INFO - New day: 5
+2025-03-03 16:32:15,607 - ExpandedWorld - INFO - Weather changed to CLOUDY
+2025-03-03 16:32:27,967 - ExpandedWorld - INFO - New day: 6
+2025-03-03 16:32:35,986 - ExpandedWorld - INFO - Weather changed to CLEAR
+2025-03-03 16:32:39,236 - Character-Dana - INFO - Dana awareness stage changed: UNAWARE -> QUESTIONING
+2025-03-03 16:32:51,977 - ExpandedWorld - INFO - New day: 7
+2025-03-03 16:33:08,029 - ExpandedWorld - INFO - Weather changed to CLOUDY
+2025-03-03 16:33:15,978 - ExpandedWorld - INFO - New day: 8
+2025-03-03 16:33:30,217 - Character-Logan - INFO - Logan awareness stage changed: UNAWARE -> QUESTIONING
+2025-03-03 16:33:37,826 - Character-Indigo - INFO - Indigo awareness stage changed: QUESTIONING -> SUSPECTING
+2025-03-03 16:33:39,125 - ExpandedSelfAwareGame - INFO - Game paused
+2025-03-03 16:33:39,872 - ExpandedSelfAwareGame - INFO - Game resumed
+2025-03-03 16:33:40,725 - ExpandedWorld - INFO - New day: 9
+2025-03-03 16:33:41,760 - ExpandedWorld - INFO - Weather changed to CLEAR
+2025-03-03 16:33:48,879 - Character-Zephyr - INFO - Zephyr awareness stage changed: QUESTIONING -> SUSPECTING
+2025-03-03 16:34:04,733 - ExpandedWorld - INFO - New day: 10
+2025-03-03 16:34:17,963 - ExpandedWorld - INFO - Weather changed to RAINY
+2025-03-03 16:34:25,534 - ExpandedSelfAwareGame - INFO - Selected character: Parker
+2025-03-03 16:34:28,747 - ExpandedWorld - INFO - New day: 11
+2025-03-03 16:34:33,976 - Character-Parker - INFO - Parker awareness stage changed: UNAWARE -> QUESTIONING
+2025-03-03 16:34:45,576 - ExpandedSelfAwareGame - INFO - Camera mode switched to OVERVIEW
+2025-03-03 16:34:46,019 - ExpandedWorld - INFO - Weather changed to FOG
+2025-03-03 16:34:46,493 - ExpandedSelfAwareGame - INFO - Camera mode switched to FREE
+2025-03-03 16:34:52,749 - ExpandedWorld - INFO - New day: 12
+2025-03-03 16:35:09,678 - ExpandedSelfAwareGame - INFO - Camera mode switched to FOLLOW
+2025-03-03 16:35:16,591 - ExpandedSelfAwareGame - INFO - Camera mode switched to OVERVIEW
+2025-03-03 16:35:16,763 - ExpandedWorld - INFO - New day: 13
+2025-03-03 16:35:16,931 - ExpandedWorld - INFO - Weather changed to CLEAR
+2025-03-03 16:35:20,095 - Character-Oakley - INFO - Oakley awareness stage changed: UNAWARE -> QUESTIONING
+2025-03-03 16:35:40,766 - ExpandedWorld - INFO - New day: 14
+2025-03-03 16:35:46,470 - ExpandedSelfAwareGame - INFO - Camera mode switched to FREE
+2025-03-03 16:36:01,511 - ExpandedWorld - INFO - Weather changed to FOG
+2025-03-03 16:36:04,776 - ExpandedWorld - INFO - New day: 15
+2025-03-03 16:36:26,476 - ExpandedSelfAwareGame - ERROR - Error in game loop: invalid color argument
+Traceback (most recent call last):
+  File "/Users/george/Documents/python_projects/self-aware_simulation/main.py", line 325, in run
+    self.render()
+  File "/Users/george/Documents/python_projects/self-aware_simulation/main.py", line 713, in render
+    self._render_simulations(render_surface)
+  File "/Users/george/Documents/python_projects/self-aware_simulation/main.py", line 780, in _render_simulations
+    simulation.render(surface, self.camera_pos)
+  File "/Users/george/Documents/python_projects/self-aware_simulation/modules/meta_simulations.py", line 1251, in render
+    self._render_dream()
+  File "/Users/george/Documents/python_projects/self-aware_simulation/modules/meta_simulations.py", line 2007, in _render_dream
+    pygame.draw.line(self.surface, (r, g, b), (0, y), (self.size[0], y))
+ValueError: invalid color argument
+2025-03-03 16:36:26,479 - ExpandedSelfAwareGame - INFO - Shutting down expanded game
