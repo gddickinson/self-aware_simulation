@@ -138,3 +138,7 @@ Future development will focus on:
 - Additional mini-simulations
 - Expanded transcendence mechanics
 - Multiplayer deity mode
+
+
+---
+*Built with AI assistance from [Claude (Anthropic)](https://claude.com/).*
