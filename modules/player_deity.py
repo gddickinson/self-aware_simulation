@@ -11,6 +11,8 @@ from enum import Enum, auto
 from dataclasses import dataclass
 import json
 
+from modules.expanded_world import Weather
+
 logger = logging.getLogger("player_deity")
 
 class DeityPower(Enum):
@@ -198,6 +200,9 @@ class PlayerDeitySystem:
 
         # Selected entity (if any)
         self.selected_entity_id = None
+
+        # Screen -> world converter; the game sets this to its camera transform (identity until then)
+        self.screen_to_world = None
 
         # UI elements
         self.ui_elements = self._initialize_ui()
@@ -736,6 +741,29 @@ class PlayerDeitySystem:
 
         return False
 
+    def _screen_to_world(self, screen_pos):
+        """Convert a screen position to world coordinates using the game's camera (identity if none is set)."""
+        if self.screen_to_world is None:
+            return tuple(screen_pos)
+        return self.screen_to_world(screen_pos)
+
+    def _find_character_at_position(self, screen_pos, characters):
+        """Return the character whose body rectangle contains the clicked screen position, or None."""
+        x, y = self._screen_to_world(screen_pos)
+        for character in characters:
+            if (character.position[0] <= x < character.position[0] + character.size[0] and
+                    character.position[1] <= y < character.position[1] + character.size[1]):
+                return character
+        return None
+
+    def _call_power(self, method_name, *args):
+        """Run a power handler. Handlers not written yet report that instead of crashing the game loop."""
+        handler = getattr(self, method_name, None)
+        if handler is None:
+            self.add_message(f"{self.current_mode.name} powers are not implemented yet")
+            return
+        handler(*args)
+
     def _activate_power(self, power, mouse_pos, characters):
         """Activate a deity power.
 
@@ -815,21 +843,21 @@ class PlayerDeitySystem:
                     closest_distance = distance
 
             if closest_character:
-                self._use_inspire_power(position, closest_character.id)
+                self._call_power("_use_inspire_power", position, closest_character.id)
             else:
-                self._use_inspire_power(position)  # Area inspiration
+                self._call_power("_use_inspire_power", position)  # Area inspiration
 
         elif self.current_mode == DeityInterfaceMode.REVEAL:
-            self._use_reveal_power(position)
+            self._call_power("_use_reveal_power", position)
 
         elif self.current_mode == DeityInterfaceMode.TERRAFORM:
-            self._use_terraform_power(position)
+            self._call_power("_use_terraform_power", position)
 
         elif self.current_mode == DeityInterfaceMode.ACCELERATE:
-            self._use_accelerate_power(position)
+            self._call_power("_use_accelerate_power", position)
 
         elif self.current_mode == DeityInterfaceMode.TRANSCEND:
-            self._use_transcend_power(position)
+            self._call_power("_use_transcend_power", position)
 
     def _use_weather_power(self, position):
         """Use weather control power.

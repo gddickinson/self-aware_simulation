@@ -99,6 +99,7 @@ class ExpandedSelfAwareGame:
 
         # Create player deity system
         self.player_deity = PlayerDeitySystem(self.world, self.transcendence_manager)
+        self.player_deity.screen_to_world = self._screen_to_world
 
         # Resource loading
         self._load_resources()
