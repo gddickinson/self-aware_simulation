@@ -28,3 +28,16 @@ def test_ambient_spawn_after_camera_update():
     for _ in range(200):
         world._spawn_ambient_object()
     assert len(world.ambient_objects) == 200
+
+
+def test_thought_shows_for_three_to_five_seconds():
+    """trigger_thought() set thought_timer to 180-300 ("3-5 seconds at 60 FPS") but update() counts it down in
+    milliseconds, so thought bubbles vanished after 0.2-0.3 s."""
+    from modules.enhanced_character import EnhancedCharacter
+    world = ExpandedWorld(5000, 3000)
+    char = EnhancedCharacter("Test", "t", [100, 100], world, None)
+    for _ in range(50):
+        char.trigger_thought(specific_to_awareness=True)
+        assert 3000 <= char.thought_timer <= 5000
+    char.update(1000, [char])
+    assert char.thought_timer >= 2000

@@ -845,7 +845,7 @@ class EnhancedCharacter:
             self.current_thought = random.choice(thoughts)
 
         # Set timer for how long the thought will be displayed
-        self.thought_timer = random.randint(180, 300)  # 3-5 seconds at 60 FPS
+        self.thought_timer = random.randint(3000, 5000)  # 3-5 seconds (update() counts down in milliseconds)
 
     def render(self, surface, camera_offset=(0, 0)):
         """Render the character on the given surface.
