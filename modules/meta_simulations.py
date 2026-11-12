@@ -1170,17 +1170,14 @@ class MetaSimulation:
 
                 # After explosion, remove the star
                 if random.random() < 0.5:
-                    # Remove the star and its planets
-                    for planet_index in star['planets']:
-                        if planet_index < len(self.planets):
-                            self.planets.pop(planet_index)
-
+                    # Remove the star and the planets orbiting it (a planet's orbit_center is its star's position)
+                    self.planets = [p for p in self.planets if p['orbit_center'] is not star['position']]
                     self.stars.pop(star_index)
 
-                    # Update galaxy references
+                    # Galaxy references: drop the star, shift the indices after it
                     for galaxy in self.galaxies:
-                        if star_index in galaxy['stars']:
-                            galaxy['stars'].remove(star_index)
+                        galaxy['stars'] = [i if i < star_index else i - 1 for i in galaxy['stars'] if i != star_index]
+                    self._reindex_planets()
 
             elif event_type == "blackhole" and len(self.galaxies) > 0:
                 # Create black hole at center of random galaxy
@@ -1216,6 +1213,12 @@ class MetaSimulation:
                     planet2['size'] = new_size
                     planet2['color'] = new_color
                     self.planets.pop(planet1_index)
+                self._reindex_planets()
+
+    def _reindex_planets(self):
+        """Rebuild each star's list of planet indices after planets were removed."""
+        for star in self.stars:
+            star['planets'] = [i for i, p in enumerate(self.planets) if p['orbit_center'] is star['position']]
 
     def render(self, surface, camera_offset=(0, 0)):
         """Render the simulation on the provided surface.

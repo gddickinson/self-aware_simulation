@@ -133,3 +133,34 @@ def test_introspective_trait_doubles_thought_probability(capsys):
         else:
             assert c.thought_probability == 0.01
     assert seen and "Could not apply trait" not in capsys.readouterr().out
+
+
+def test_supernova_removes_exactly_its_own_planets(monkeypatch):
+    """A supernova popped planets by index while the list shrank (removing the wrong planets, or raising), and left
+    stale star and planet indices behind."""
+    from modules import meta_simulations
+    from modules.meta_simulations import MetaSimulation, SimulationType
+    random.seed(4)
+    sim = MetaSimulation(SimulationType.MINIVERSE, [0, 0], (350, 250), None)
+    star_index = max(range(len(sim.stars)), key=lambda i: len(sim.stars[i]["planets"]))
+    star = sim.stars[star_index]
+    assert len(star["planets"]) >= 2
+    keep = [p for p in sim.planets if p["orbit_center"] is not star["position"]]
+    for g in sim.galaxies:
+        g["rotation_speed"] = 0
+    for p in sim.planets:
+        p["has_life"] = False
+
+    class Script(_ScriptedRandom):
+        def choice(self, seq):
+            return "supernova" if "supernova" in seq else seq[0]
+
+        def randrange(self, n):
+            return star_index
+    # galaxy checks (5), add star (no), add planet (no), cosmic event (yes), then "remove the star" (yes)
+    monkeypatch.setattr(meta_simulations, "random", Script([0.5] * 5 + [0.9, 0.9, 0.0, 0.0]))
+    sim._update_miniverse(16)
+    assert star not in sim.stars and sim.planets == keep
+    for s in sim.stars:
+        assert all(sim.planets[i]["orbit_center"] is s["position"] for i in s["planets"])
+    assert all(0 <= i < len(sim.stars) for g in sim.galaxies for i in g["stars"])
