@@ -1,9 +1,9 @@
-// Canvas drawing of the running game: sky by time of day, zones, meta-simulations, reality thin spots (optional),
-// deity weather actions, ambient objects, characters with awareness halos and thought bubbles, weather overlays.
+// Canvas drawing of the running game: sky by time of day, zones, meta-simulations, effects (sim_render_fx.js), ambient objects, characters with awareness halos and thought bubbles, weather overlays.
 // Colours come from the Python renderer (_render_sky, _get_awareness_color); visual noise uses its own seeded
 // generator so drawing never touches the simulation's random stream.
 import { rng } from './core.js';
 import { drawMetaSim } from './sim_render_meta.js';
+import { drawSpot, drawAction, drawEffects, drawLinks } from './sim_render_fx.js';
 
 export const SKY = { DAWN: [135, 90, 120], MORNING: [160, 200, 255], NOON: [100, 180, 255], AFTERNOON: [120, 150, 200],
   EVENING: [200, 100, 50], NIGHT: [20, 20, 50], MIDNIGHT: [5, 5, 20] };
@@ -27,14 +27,16 @@ export function drawWorld(ctx, game, view, opts = {}) {
   ctx.setTransform(view.z, 0, 0, view.z, -view.x * view.z, -view.y * view.z);
   const dpr = opts.dpr || 1, px = dpr / view.z, near = view.z / dpr >= 0.25;   // px: one CSS pixel in world units
   for (const z of w.zones) drawZone(ctx, z, game, vis, px);
-  if (opts.spots) for (const sp of game.transcendence.spots) drawSpot(ctx, sp);
+  for (const sp of game.transcendence.spots) drawSpot(ctx, sp, opts.spots);
   for (const s of game.simulations) drawSim(ctx, s, game, px, opts.selected === s);
   for (const a of game.deity.active_actions) drawAction(ctx, a, px);
+  drawEffects(ctx, game, px);
+  drawLinks(ctx, game, px);
   for (const o of w.ambient_objects) drawAmbient(ctx, o, px);
   const chars = game.characters.slice().sort((a, b) => a.position[1] - b.position[1]);
   for (const c of chars) drawCharacter(ctx, c, px, opts.selected === c, near || opts.selected === c);
   if (opts.thoughts !== false) for (const c of chars) {
-    if (c.thought_timer > 0 && c.current_thought && (near || opts.selected === c)) drawThought(ctx, c, px);
+    if (c.thought_timer > 0 && c.current_thought && (view.z / dpr >= 0.4 || opts.selected === c)) drawThought(ctx, c, px);
   }
   ctx.setTransform(1, 0, 0, 1, 0, 0);
   drawWeather(ctx, w, vis, W, H);
@@ -61,15 +63,6 @@ function drawZone(ctx, z, game, vis, px) {
   ctx.fillStyle = 'rgba(255,255,255,.6)'; ctx.font = `${10 * px}px monospace`; ctx.fillText(z.type, x + 8 * px, y + 31 * px);
 }
 
-function drawSpot(ctx, sp) {
-  ctx.strokeStyle = 'rgba(0,220,255,.6)'; ctx.setLineDash([6, 6]); ctx.lineWidth = 2;
-  ctx.beginPath(); ctx.arc(sp.position[0], sp.position[1], sp.radius, 0, 7); ctx.stroke(); ctx.setLineDash([]);
-  for (const n of sp.noise) {
-    ctx.fillStyle = rgb(n.color, 0.8);
-    ctx.fillRect(sp.position[0] + n.offset[0], sp.position[1] + n.offset[1], n.size * 2, n.size * 2);
-  }
-}
-
 function drawSim(ctx, s, game, px, selected) {
   const [x, y] = s.position, [w, h] = s.size;
   ctx.save(); ctx.translate(x, y); ctx.beginPath(); ctx.rect(0, 0, w, h); ctx.clip();
@@ -83,13 +76,6 @@ function drawSim(ctx, s, game, px, selected) {
   const label = s.type.replace('_', ' ') + (s.is_paused ? ' (paused)' : ''), tw = ctx.measureText(label).width;
   ctx.fillStyle = 'rgba(0,0,0,.65)'; ctx.fillRect(x + w / 2 - tw / 2 - 4 * px, y - 18 * px, tw + 8 * px, 15 * px);
   ctx.fillStyle = '#fff'; ctx.fillText(label, x + w / 2 - tw / 2, y - 7 * px);
-}
-
-function drawAction(ctx, a, px) {
-  ctx.strokeStyle = 'rgba(200,200,250,.7)'; ctx.lineWidth = 2 * px; ctx.setLineDash([8 * px, 6 * px]);
-  ctx.beginPath(); ctx.arc(a.position[0], a.position[1], 150 * a.magnitude, 0, 7); ctx.stroke(); ctx.setLineDash([]);
-  ctx.fillStyle = 'rgba(200,200,250,.55)';
-  for (const c of a.clouds) { ctx.beginPath(); ctx.arc(c.position[0], c.position[1], c.size, 0, 7); ctx.fill(); }
 }
 
 function drawAmbient(ctx, o, px) {

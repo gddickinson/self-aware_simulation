@@ -23,7 +23,7 @@ from web import snapshot  # noqa: E402
 
 ROOT = Path(__file__).resolve().parent.parent
 DT = 16                    # ms per simulated frame (~62 fps)
-MAX_STEPS = 20000
+MAX_STEPS = 60000
 _lock = threading.Lock()   # the game uses process-wide state (random, pygame, logging, cwd)
 
 

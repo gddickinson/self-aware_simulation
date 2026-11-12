@@ -1,12 +1,17 @@
-// The simulation engine: builds the game exactly like ExpandedSelfAwareGame.__init__ (main.py) and advances it like
-// ExpandedSelfAwareGame.update(), one fixed DT-millisecond frame per step, with Python's random module reproduced by
-// PyRandom. A seed therefore gives the same run as web/headless.py (checked by sim_engine.test.mjs). Events mirror
-// the Python log records; events marked `web` (deity messages, miniverse events) are extra notes for the page.
+// The simulation engine: builds the game exactly like ExpandedSelfAwareGame.__init__ (main.py, game_setup.py) and
+// advances it like ExpandedSelfAwareGame.update(), one fixed DT-millisecond frame per step, with Python's random
+// module reproduced by PyRandom. A seed therefore gives the same run as web/headless.py (checked by
+// sim_engine.test.mjs). Events mirror the Python log records; events marked `web` (deity messages, miniverse events)
+// are extra notes for the page. Snapshots are in sim_snapshot.js.
 import { PyRandom, pyFixed } from './py_random.js';
 import { World } from './sim_world.js';
-import { Character, NEEDS } from './sim_character.js';
+import { Character } from './sim_character.js';
 import { MetaSim } from './sim_meta.js';
-import { Transcendence, Deity } from './sim_powers.js';
+import { Transcendence } from './sim_transcend.js';
+import { Deity } from './sim_deity.js';
+import { InteractionSystem } from './sim_interactions.js';
+import { EventManager } from './sim_events.js';
+import { snapshot } from './sim_snapshot.js';
 
 export const DT = 16;
 export const NAMES = ['Alex', 'Blake', 'Casey', 'Dana', 'Elliot', 'Finley', 'Gale', 'Harper', 'Indigo', 'Jordan', 'Kai',
@@ -67,7 +72,18 @@ export class Game {
         this.log('INFO', `Created ${type} simulation in ${z.name}`);
       }
     }
+    this.dialogue = [];                                // DialogueSystem.message_history: [sender, message]
+    this.interactions = new InteractionSystem(this);
+    this.events_manager = new EventManager(this, this.interactions.schools);
+    for (const c of this.characters) { c.interaction_system = this.interactions; c.transcendence = this.transcendence; }
     this.initializing = false;
+  }
+
+  // DialogueSystem.add_message(): the history keeps 100 lines; the Python log shows the first 20 characters.
+  say(sender, message, meta = {}) {
+    this.dialogue.push([sender, message]);
+    if (this.dialogue.length > 100) this.dialogue.shift();
+    this.log('DEBUG', `New message from ${sender}: ${message.slice(0, 20)}...`, { kind: 'say', sender, full: message, ...meta });
   }
 
   ticks() { return Math.trunc(this.clock); }
@@ -85,7 +101,8 @@ export class Game {
   }
 
   applyAction(a) {
-    if (a.kind === 'weather') this.deity.weather(a.x, a.y, a.power, a.duration);
+    if (a.kind === 'power' || a.kind === 'weather') this.deity.usePower(a.name || 'WEATHER', a.x, a.y, a.power, a.duration);
+    else if (a.kind === 'thin_spot') this.deity.openThinSpot(a.x, a.y, a.power, a.duration);
     else if (a.kind === 'pause') { const s = this.simulations[a.sim]; if (s) s.is_paused = !s.is_paused; }
   }
 
@@ -94,7 +111,12 @@ export class Game {
     this.world.update(DT);
     this.transcendence.update(DT);
     this.deity.update(DT, this.characters);
-    for (const c of this.characters) { c.update(DT); this.simInteractions(c); }
+    for (const c of this.characters) {
+      c.update(DT * this.deity.timeMultiplierAt(c.position), this.characters);
+      this.simInteractions(c);
+    }
+    this.interactions.update(DT);
+    this.events_manager.update(DT, this.characters);
     for (const s of this.simulations) s.update(DT);
     this.clock += DT;
     this.step += 1;
@@ -138,60 +160,11 @@ export class Game {
       s.awareness_level += boost;
       this.log('DEBUG', `Simulation gained ${pyFixed(boost, 2)} awareness from ${c.name}`, { char: c.id, kind: 'boost' });
       if (s.awareness_level >= 5.0 && s.awareness_level - boost < 5.0) {
-        const text = `The ${T} simulation has become significantly self-aware!`;
-        this.log('DEBUG', `New message from SYSTEM: ${text.slice(0, 20)}...`, { kind: 'system', full: text });
+        this.say('SYSTEM', `The ${T} simulation has become significantly self-aware!`, { kind: 'system' });
       }
     }
   }
 
   // The game state in the format of web/snapshot.py (full=true adds static character details and zones).
-  snapshot(full = false) {
-    const sum = (xs, f) => xs.reduce((t, x) => t + f(x), 0);
-    const w = this.world, tm = this.transcendence, d = this.deity;
-    const chars = this.characters.map(c => {
-      const o = { id: c.id, name: c.name, pos: c.position.slice(), awareness: c.awareness_level, stage: c.awareness_stage,
-        needs: NEEDS.map(n => c.needs[n]), thought: c.current_thought, thought_timer: c.thought_timer,
-        memories: c.memories.length, abilities: c.abilities.slice() };
-      if (full) Object.assign(o, { color: c.color.slice(), traits: c.traits.map(t => t[0]), stance: c.philosophical_stance,
-        certainty: c.philosophical_certainty, growth_rate: c.awareness_growth_rate, memory_access_speed: c.memory_access_speed,
-        thought_probability: c.thought_probability, behavior: { ...c.behavior_patterns }, memory_texts: c.memories.map(m => m.content) });
-      return o;
-    });
-    const snap = { step: this.step, t: this.ticks(), rng: this.R.stateCheck(),
-      world: { tod: w.time_of_day, day: w.day_count, weather: w.weather, weather_timer: w.weather_timer,
-        weather_duration: w.weather_duration, cycle: w.time_cycle_timer, stability: w.reality_stability,
-        ambient: w.ambient_objects.map(o => [o.type, o.position[0], o.position[1]]) },
-      chars,
-      sims: this.simulations.map(s => ({ type: s.type, pos: s.position.slice(), size: s.size.slice(), awareness: s.awareness_level,
-        stability: s.reality_stability, paused: s.is_paused, ticks: s.elapsed_ticks, visitors: s.visiting.map(c => c.id), digest: digest(s, sum) })),
-      trans: { stability: tm.reality_stability, effects: tm.active_effects.length,
-        spots: tm.spots.map(sp => [sp.position[0], sp.position[1], sp.radius, sp.strength, sp.discovery,
-          sum(sp.noise, n => n.offset[0]), sum(sp.noise, n => n.offset[1]), sp.noise.length]) },
-      deity: { cooldowns: Object.fromEntries(Object.entries(d.cooldowns).filter(([, v]) => v > 0)), actions: d.active_actions.length,
-        noticed: [...d.noticed].sort(), weather_clouds: sum(d.active_actions, a => a.clouds.length), messages: d.messages.slice() } };
-    if (full) snap.zones = w.zones.map(z => ({ id: z.id, name: z.name, type: z.type, pos: z.position.slice(), size: z.size.slice(),
-      color: z.color.slice(), props: { ...z.props } }));
-    return snap;
-  }
-}
-
-function digest(s, sum) {
-  const px = o => o.position[0], py = o => o.position[1];
-  switch (s.type) {
-    case 'SNAKE': return { snake: s.snake.map(p => p.slice()), food: s.food.slice(), score: s.score, over: s.game_over };
-    case 'LIFE': return { grid: s.grid.map(r => r.join('')).join('') };
-    case 'PARTICLES': { const p = s.particles;
-      return { n: p.length, x: sum(p, px), y: sum(p, py), vx: sum(p, q => q.velocity[0]), vy: sum(p, q => q.velocity[1]) }; }
-    case 'ECOSYSTEM': return Object.fromEntries(['plants', 'herbivores', 'carnivores'].map(k => [k,
-      [s[k].length, sum(s[k], px), sum(s[k], py), sum(s[k], q => q.energy), sum(s[k], q => q.size)]]));
-    case 'VIRTUAL_REALITY': { const o = s.environment.objects;
-      return { theme: s.theme, x: sum(o, px), y: sum(o, py), rgb: sum(o, q => q.color[0] + q.color[1] + q.color[2]) }; }
-    case 'DREAM': { const e = s.dream_entities;
-      return { theme: s.theme, n: e.length, x: sum(e, px), y: sum(e, py), size: sum(e, q => q.size),
-        distortion: s.landscape.distortion }; }
-    case 'MINIVERSE': { const p = s.planets;
-      return { stars: s.stars.length, planets: p.length, x: sum(p, px), y: sum(p, py), civ: sum(p, q => q.civilization_level),
-        aware: sum(p, q => q.awareness), rot: sum(s.galaxies, g => g.rotation), galaxy_stars: s.galaxies.map(g => g.stars.length) }; }
-    default: return {};
-  }
+  snapshot(full = false) { return snapshot(this, full); }
 }

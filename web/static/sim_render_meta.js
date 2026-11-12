@@ -1,5 +1,5 @@
 // Drawing of the meta-simulations inside their frames on the world canvas (contents follow the state of each
-// MetaSim; the look loosely follows the _render_* methods in modules/meta_simulations.py).
+// MetaSim; the look loosely follows the _render_* methods in modules/meta_sim_render*.py).
 const rgb = (c, a = 1) => `rgba(${c[0]},${c[1]},${c[2]},${a})`;
 
 export function drawMetaSim(ctx, s, t) {

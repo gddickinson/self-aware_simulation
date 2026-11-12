@@ -69,9 +69,9 @@ Players can influence the simulation through:
 
 - **Weather Control**: Change environmental conditions
 - **Inspiration**: Plant thoughts and ideas in characters
-- **Reality Manipulation**: Create miracles or calamities
-- **Time Control**: Accelerate or pause local time
-- **Creation Powers**: Summon new entities or terraform the landscape
+- **Reality Manipulation**: Create miracles (restore needs) or calamities (drain them, shake reality)
+- **Time Control**: Accelerate or nearly pause local time
+- **Thin Spots**: Open new reality thin spots where characters can attempt transcendence
 - **Revelation Powers**: Reveal or conceal the simulated nature of reality
 
 ## Meta-Simulations
@@ -117,11 +117,12 @@ Behind the scenes, the simulation uses:
 
 ## Implementation status
 
-The game loop in `main.py` runs the world (time, weather, ambient objects), character needs, memories and awareness
-growth, the meta-simulations and the character-simulation interactions. Not yet wired in: the character action
-planner (`EnhancedCharacter._decide_next_action`, so characters drift rather than walk), `character_interactions.py`
-and `event_manager.py`, and transcendence attempts. Of the deity powers only weather control has a handler; the
-others report "not implemented yet".
+The game loop in `main.py` runs the world (time, weather, ambient objects), characters who decide and act on their
+needs and personality (`modules/character_actions.py`), interactions and philosophical schools
+(`character_interactions.py`), world events (`event_manager.py`), transcendence attempts at reality thin spots, the
+meta-simulations, and the deity powers weather, inspire, reveal, conceal, miracle, calamity, accelerate, pause and
+opening a thin spot (TRANSCEND mode). Gift, terraform, transmute, summon, banish and meta were removed: nothing in the
+code or docs said what they should do.
 
 ## Installation
 
@@ -139,7 +140,7 @@ reproduces Python's `random` module, so a seed gives the same world, frame for f
 
 - **Simulation**: canvas world with play/pause/step/speed, seed box and share links that reopen the exact moment
   (including your interventions), a character/simulation inspector, roster, awareness timeline and event log, and the
-  deity weather power.
+  deity powers (weather, inspire, reveal, conceal, miracle, calamity, accelerate, pause, thin spots).
 - **Check**: the browser engine replayed against Python reference runs (every snapshot and log event).
 - **About**: what the game loop runs and how to run it.
 

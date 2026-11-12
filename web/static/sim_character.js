@@ -1,6 +1,7 @@
-// Characters: needs, traits, philosophical stance, memories, thoughts and the awareness stages. Port of the parts of
-// modules/enhanced_character.py that the game loop runs (EnhancedCharacter.__init__, update(), trigger_thought(),
-// add_memory()). The action planner in that file (_decide_next_action) is never called by main.py, so it is not ported.
+// Characters: needs, traits, philosophical stance, memories, thoughts and the awareness stages. Port of
+// modules/enhanced_character.py (EnhancedCharacter.__init__, update(), trigger_thought(), add_memory()) and
+// character_parts.py (Relationship); what characters decide and do is in sim_actions.js.
+import { ACTIONS } from './sim_actions.js';
 export const NEEDS = ['ENERGY', 'BELONGING', 'MEANING', 'AGENCY', 'TRANSCENDENCE'];
 export const STANCES = ['DETERMINIST', 'EXISTENTIALIST', 'NIHILIST', 'ABSURDIST', 'SOLIPSIST', 'PRAGMATIST', 'DUALIST', 'SIMULATIONIST'];
 export const STAGES = ['UNAWARE', 'QUESTIONING', 'SUSPECTING', 'AWARE', 'TRANSCENDING', 'TRANSCENDED'];
@@ -50,7 +51,8 @@ export class Character {
     const r = R.randint(80, 200), g = R.randint(80, 200), b = R.randint(80, 200);
     this.color = [r, g, b];
     this.animation_frame = 0; this.animation_speed = 0.1; this.animation_timer = 0;
-    this.state = 'IDLE';
+    this.state = 'IDLE'; this.state_timer = 0; this.state_duration = 0; this.current_action = null;
+    this.interaction_partner = null; this.target_position = null; this.action_queue = [];
     this.awareness_stage = 'UNAWARE';
     this.awareness_level = R.uniform(0.1, 0.5);
     this.awareness_growth_rate = R.uniform(0.001, 0.005);
@@ -67,9 +69,10 @@ export class Character {
     for (const t of this.traits) t[2](this);
     this.philosophical_stance = R.choice(STANCES);
     this.philosophical_certainty = R.uniform(0.3, 0.7);
+    this.relationships = {};
     this.current_thought = ''; this.thought_timer = 0;
     this.abilities = [];
-    this.transcendence_progress = 0.0;
+    this.transcendence_attempts = 0; this.transcendence_progress = 0.0;
     const names = this.traits.map(t => t[0].toLowerCase()), has = n => names.includes(n);
     const clamp = v => Math.max(0.1, Math.min(1.0, v));
     this.behavior_patterns = {
@@ -78,13 +81,17 @@ export class Character {
       introspection: clamp(0.5 + (has('introspective') ? 0.3 : 0) - (has('social') ? 0.1 : 0)),
       questioning: clamp(0.5 + (has('skeptical') ? 0.3 : 0) + (has('analytical') ? 0.2 : 0)),
     };
+    this.interaction_system = null; this.transcendence = null;
+    this.state_duration = R.randint(500, 3000);
   }
 
-  update(dt) {
-    const R = this.R;
+  update(dt, all) {
     this.animation_timer += this.animation_speed * dt / 1000;
     if (this.animation_timer >= 1) { this.animation_timer = 0; this.animation_frame = (this.animation_frame + 1) % 4; }
-    if (this.thought_timer > 0) this.thought_timer -= dt;
+    if (this.thought_timer > 0) {
+      this.thought_timer -= dt;
+      if (this.thought_timer <= 0) this.current_thought = '';
+    } else if (this.R.random() < this.thought_probability) this.triggerThought();
     this.updateNeeds(dt);
     this.updateAwareness(dt);
     const kept = [];
@@ -93,17 +100,18 @@ export class Character {
       if (m.fading > 0.1) kept.push(m);
     }
     this.memories = kept;
-    this.position[0] += R.uniform(-1, 1);
-    this.position[1] += R.uniform(-1, 1);
+    this.state_timer += dt;
+    if (this.current_action === null && !this.action_queue.length && this.state_timer >= this.state_duration) this.updateState(all);
+    this.processQueue(dt, all);
   }
 
   updateNeeds(dt) {
-    const decay = { ENERGY: 0.0001, BELONGING: 0.00005, MEANING: 0.00002, AGENCY: 0.00003, TRANSCENDENCE: 0.00001 };
+    const decay = { ENERGY: 0.00001, BELONGING: 0.000005, MEANING: 0.000002, AGENCY: 0.000003, TRANSCENDENCE: 0.000001 };
     for (const need of NEEDS) {
       let v = this.needs[need] - (decay[need] * dt);
       if (need === 'ENERGY' && this.state === 'RESTING') v += 0.0005 * dt;
       if (need === 'MEANING' && this.state === 'THINKING') v += 0.0002 * dt;
-      if (need === 'TRANSCENDENCE' && this.awareness_level > 5.0) v -= 0.00005 * dt;
+      if (need === 'TRANSCENDENCE' && this.awareness_level > 5.0) v -= 0.000005 * dt;
       this.needs[need] = Math.max(0.0, Math.min(1.0, v));
     }
   }
@@ -145,4 +153,21 @@ export class Character {
   }
 
   get stageIndex() { return STAGES.indexOf(this.awareness_stage); }
+}
+Object.assign(Character.prototype, ACTIONS);
+
+// Relationship (character_parts.py): trust, affinity and understanding toward one other character.
+export class Relationship {
+  constructor(otherId) { Object.assign(this, { other_id: otherId, trust: 0.0, affinity: 0.0, understanding: 0.0, shared: [] }); }
+  updateFromInteraction(kind, outcome) {
+    if (kind === 'conversation') { this.affinity += outcome * 0.1; this.understanding += Math.abs(outcome) * 0.05; }
+    else if (kind === 'help') { this.trust += outcome * 0.15; this.affinity += outcome * 0.1; }
+    else if (kind === 'conflict') {
+      this.trust -= Math.abs(outcome) * 0.1; this.affinity -= Math.abs(outcome) * 0.1; this.understanding += outcome * 0.05;
+    }
+    this.trust = Math.max(-1.0, Math.min(1.0, this.trust));
+    this.affinity = Math.max(-1.0, Math.min(1.0, this.affinity));
+    this.understanding = Math.max(0.0, Math.min(1.0, this.understanding));
+  }
+  quality() { return (this.trust * 0.4) + (this.affinity * 0.4) + (this.understanding * 0.2); }
 }

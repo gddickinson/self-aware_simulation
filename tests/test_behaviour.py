@@ -28,7 +28,7 @@ def test_needs_are_met_during_the_first_minute():
 
 
 def test_characters_walk_interact_and_attempt_transcendence():
-    run = headless.run(2024, 6 * MINUTE, every=6 * MINUTE)
+    run = headless.run(14, 2 * MINUTE, every=2 * MINUTE)
     assert _messages(run, "Started ") and _messages(run, "Completed ")
     assert _messages(run, "Transcendence attempt by")
     start = {c["id"]: c["pos"] for c in run["init"]["chars"]}
@@ -38,8 +38,9 @@ def test_characters_walk_interact_and_attempt_transcendence():
 
 
 def test_world_events_happen_in_a_long_run():
-    run = headless.run(7, 15 * MINUTE, every=15 * MINUTE)
-    assert _messages(run, "Triggering event:")
+    """Event timers start at 1-10 minutes; seed 17 has a reality glitch at frame 7249 (about two minutes)."""
+    run = headless.run(17, 7300, every=7300)
+    assert _messages(run, "Triggering event: reality_glitch") and _messages(run, "SYSTEM: A Reality Glitch")
 
 
 def test_each_deity_power_takes_effect():

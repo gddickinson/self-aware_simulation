@@ -18,17 +18,26 @@ from web import headless  # noqa: E402
 
 FIXTURE = ROOT / "tests" / "fixtures" / "sim_runs.json"
 EVERY = 200
+def _power(step, name, x, y, power=0.9, duration=0.5):
+    return {"step": step, "kind": "power", "name": name, "x": x, "y": y, "power": power, "duration": duration}
+
+
+# Every deity power, a thin spot, a power refused on cooldown, and pausing/resuming a simulation.
 ACTIONS = [{"step": 30, "kind": "weather", "x": 2500, "y": 1500, "power": 0.9, "duration": 0.5},
-           {"step": 200, "kind": "pause", "sim": 1},
-           {"step": 400, "kind": "weather", "x": 1700, "y": 1300, "power": 0.55, "duration": 0.2},
-           {"step": 700, "kind": "weather", "x": 1400, "y": 2000, "power": 0.3, "duration": 1.0},
-           {"step": 900, "kind": "pause", "sim": 1}]
-# Seed 2024 has two characters above awareness 8 near (3330, 2250) by frame 9000: a weather power there lets them
-# detect the player. Seed 25 has a simulation reach awareness 5 through a character (frame 670).
-DETECT = [{"step": 9000, "kind": "weather", "x": 3330, "y": 2250, "power": 0.95, "duration": 1.0}]
+           _power(60, "INSPIRE", 2300, 1400), _power(90, "REVEAL", 2500, 1500), _power(120, "CONCEAL", 2200, 1300, 0.6),
+           _power(150, "MIRACLE", 1700, 1300), _power(180, "CALAMITY", 3200, 1100, 0.7, 0.2),
+           {"step": 200, "kind": "pause", "sim": 1}, _power(220, "ACCELERATE", 2000, 1600), _power(260, "PAUSE", 3000, 1500),
+           {"step": 300, "kind": "thin_spot", "x": 2600, "y": 1500, "power": 0.5, "duration": 0.5},
+           _power(320, "REVEAL", 2500, 1500), _power(400, "WEATHER", 1700, 1300, 0.55, 0.2),
+           _power(700, "WEATHER", 1400, 2000, 0.3, 1.0), {"step": 900, "kind": "pause", "sim": 1}]
+# Seed 14 has a character above awareness 8 thinking at (1491, 1593) at frame 9000: powers there let it notice the
+# player. Seed 20 has a weather anomaly, a philosophical emergence, a collective insight and a reality glitch by frame
+# 30 000; seed 14 a transcendence wave and guided transcendence by frame 40 000.
+DETECT = [_power(9000, "WEATHER", 1460, 1600, 0.95, 1.0), _power(9010, "INSPIRE", 1505, 1620, 0.9, 1.0),
+          _power(9020, "REVEAL", 1460, 1600, 0.95, 1.0)]
 RUNS = [{"seed": 1, "steps": 3000}, {"seed": 7, "steps": 3000}, {"seed": 42, "steps": 3000},
-        {"seed": 2024, "steps": 12000}, {"seed": 5, "steps": 1200, "actions": ACTIONS}, {"seed": 25, "steps": 1500},
-        {"seed": 2024, "steps": 10000, "actions": DETECT}]
+        {"seed": 20, "steps": 30000, "every": 500}, {"seed": 5, "steps": 1200, "actions": ACTIONS},
+        {"seed": 14, "steps": 40000, "every": 1000}, {"seed": 14, "steps": 10500, "actions": DETECT}]
 HASH_TUPLES = [[0, 0], [1, 2], [-1, 5], [1.5, 2.25], [10.000000001, 290], [175.33, -3.0], [1e-7, 123456.789],
                [3.141592653589793, 2.718281828459045], [-0.5, -0.25], [2 ** 40 + 0.5, 7]]
 
@@ -49,8 +58,8 @@ def build(runs=RUNS):
     return {"python": sys.version.split()[0], "every": EVERY, "rng": rng_streams(),
             "hashes": [[list(t), str(hash(tuple(t))), hash(tuple(t)) % 100] for t in HASH_TUPLES],
             "formats": [[x, f"{x:.2f}", f"{x:.1f}"] for x in (0.125, 0.375, 0.625, 2.675, 0.045, 1e-9, 9.984, 0.0625)],
-            "runs": [headless.run(r["seed"], r["steps"], every=EVERY, actions=r.get("actions", ())) | {"actions": r.get("actions", [])}
-                     for r in runs]}
+            "runs": [headless.run(r["seed"], r["steps"], every=r.get("every", EVERY), actions=r.get("actions", ()))
+                     | {"actions": r.get("actions", []), "every": r.get("every", EVERY)} for r in runs]}
 
 
 if __name__ == "__main__":

@@ -20,7 +20,10 @@ def _xy(p):
 def character(c, full=False):
     d = {"id": c.id, "name": c.name, "pos": _xy(c.position), "awareness": c.awareness_level,
          "stage": c.awareness_stage.name, "needs": list(c.needs.values()), "thought": c.current_thought,
-         "thought_timer": c.thought_timer, "memories": len(c.memories), "abilities": list(c.abilities)}
+         "thought_timer": c.thought_timer, "memories": len(c.memories), "abilities": list(c.abilities),
+         "state": c.state.name, "action": c.current_action[0] if c.current_action else None,
+         "queue": [a[0] for a in c.action_queue], "attempts": c.transcendence_attempts,
+         "relations": {k: [r.trust, r.affinity, r.understanding] for k, r in sorted(c.relationships.items())}}
     if full:
         d.update({"color": list(c.color), "traits": [t.name for t in c.traits], "stance": c.philosophical_stance.name,
                   "certainty": c.philosophical_certainty, "growth_rate": c.awareness_growth_rate,
@@ -84,7 +87,8 @@ def sim(s, full=False):
 def world(w):
     return {"tod": w.time_of_day.name, "day": w.day_count, "weather": w.weather.name, "weather_timer": w.weather_timer,
             "weather_duration": w.weather_duration, "cycle": w.time_cycle_timer, "stability": w.reality_stability,
-            "ambient": [[o.object_type, o.position[0], o.position[1]] for o in w.ambient_objects]}
+            "ambient": [[o.object_type, o.position[0], o.position[1]] for o in w.ambient_objects],
+            "discovery": [z.discovery_status for z in w.zones.values()]}
 
 
 def transcendence(tm):
@@ -93,17 +97,41 @@ def transcendence(tm):
         noise = sp["visual_noise"]
         spots.append([sp["position"][0], sp["position"][1], sp["radius"], sp["strength"], sp["discovery_status"],
                       _sum(noise, lambda n: n["offset"][0]), _sum(noise, lambda n: n["offset"][1]), len(noise)])
-    return {"stability": tm.reality_stability, "effects": len(tm.active_effects), "spots": spots}
+    return {"stability": tm.reality_stability, "effects": [[e.type, e.duration, len(e.particles or [])] for e in tm.active_effects],
+            "spots": spots, "transcended": [c.id for c in tm.transcended_entities]}
 
 
 def deity(d):
-    return {"cooldowns": {p.name: v for p, v in d.cooldowns.items() if v > 0}, "actions": len(d.active_actions),
-            "noticed": sorted(d.noticed_player), "weather_clouds": _sum(d.active_actions, lambda a: len(a.visual_effects)),
+    return {"cooldowns": {p.name: v for p, v in d.cooldowns.items() if v > 0},
+            "actions": [[a.power_type.name, a.elapsed, len(a.affected_entities)] for a in d.active_actions],
+            "mode": d.current_mode.name, "selected": d.selected_power.name if d.selected_power else None,
+            "transcend_cooldown": d.transcend_cooldown, "areas": [[a["multiplier"], a["elapsed"]] for a in d.accelerated_areas],
+            "noticed": sorted(d.noticed_player), "visual_effects": _sum(d.active_actions, lambda a: len(a.visual_effects)),
             "messages": [m["text"] for m in d.ui_elements["message_log"]["messages"]]}
+
+
+def interactions(system):
+    return {"active": [[i['type'].name, i['characters'][0].id, i['characters'][1].id, i['stage'], len(i['dialogue'])]
+                       for i in system.active_interactions],
+            "history": [[h['type'].name, h['outcome'], h['awareness_transfer']] for h in system.interaction_history[-10:]],
+            "schools": [[k, s.name, list(s.adherents), list(s.tenets), s.influence]
+                        for k, s in system.philosophical_schools.items()],
+            "breakthroughs": len(system.breakthrough_ideas), "patterns": sorted(system.emerging_patterns.items())}
+
+
+def events(em):
+    return {"timers": dict(em.event_timers),
+            "active": [[e['type'], e['elapsed'], e['duration'], e['intensity'], [c.id for c in e['affected_characters']]]
+                       for e in em.active_events],
+            "history": len(em.event_history),
+            "particles": [[p.effect_type, p.elapsed, len(p.particles), _sum(p.particles, lambda q: q['position'][0]),
+                           _sum(p.particles, lambda q: q['position'][1])] for p in em.particle_effects]}
 
 
 def compact(game, step, t, full=False):
     return {"step": step, "t": t, "rng": rng_state(), "world": world(game.world),
+            "talk": interactions(game.interaction_system), "events": events(game.event_manager),
+            "dialogue": [[m.sender, m.message] for m in list(game.dialogue.message_history)[-20:]],
             "chars": [character(c, full) for c in game.characters], "sims": [sim(s, full) for s in game.simulations],
             "trans": transcendence(game.transcendence_manager), "deity": deity(game.player_deity)}
 

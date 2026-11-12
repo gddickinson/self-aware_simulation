@@ -20,7 +20,7 @@ route('home', async () => {
       <div class="tile"><b>${info.frames_per_day}</b><span>frames per game day (${info.dt_ms} ms each)</span></div></div>
     <h2>From unaware to transcended</h2>
     <p>Awareness runs from 0 to 10. Each character starts somewhere on the scale, grows a little every second, and gains
-      more whenever it walks into a simulation that is more self-aware than itself. Crossing a threshold gives the
+      more from teachers and revelations, world events and simulations more self-aware than itself. Crossing a threshold gives the
       character a new stage, a memory of the insight and a thought.</p>
     <div class="stagelist">${info.stages.map((s, i) => `<div style="border-color:${STAGE_INK[s]}"><b style="color:${STAGE_INK[s]}">${s.toLowerCase()}</b>
       awareness ${lows[i]}${i < 5 ? `–${lows[i + 1]}` : '+'}</div>`).join('')}</div>
@@ -28,7 +28,7 @@ route('home', async () => {
     <div class="grid">
       <a class="card door" href="#/sim"><b>Simulation</b><small>watch, inspect, intervene</small><span>Play, pause, step and speed
         up the world; click a character to see its needs, traits, memories and thoughts; follow awareness on the timeline;
-        use the weather power; share a link to the exact moment.</span></a>
+        use the deity powers; share a link to the exact moment.</span></a>
       <a class="card door" href="#/check"><b>Check</b><small>JS vs Python</small><span>The browser engine replayed against
         seeded runs of the real Python game: every snapshot and every logged event.</span></a>
       <a class="card door" href="#/about"><b>About</b><small>what runs, how to run it</small><span>What the game loop does,

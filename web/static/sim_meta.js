@@ -1,6 +1,6 @@
 // Meta-simulations: the small worlds inside the world (Snake, Game of Life, particles, ecosystem, virtual reality,
 // dream, miniverse). Port of MetaSimulation.__init__/_init_*()/update()/_update_awareness() from
-// modules/meta_simulations.py; the per-type update rules are in sim_meta_update.js.
+// modules/meta_simulations.py and meta_sim_setup.py; the per-type update rules are in sim_meta_update.js.
 import { UPDATERS, placeFood } from './sim_meta_update.js';
 
 const TAU = 2 * Math.PI;

@@ -24,7 +24,10 @@ function characterHtml(game, c) {
   return `<h3 style="color:${rgb(c.color.map(v => Math.min(255, v + 50)))}">${esc(c.name)}</h3>
     <p class="small">${stageChip(c.awareness_stage)} <span class="mono">${c.awareness_level.toFixed(2)}</span> / 10
       ${bar(c.awareness_level / 10, STAGE_INK[c.awareness_stage])}</p>
-    <p class="small mute">Grows ${perMin.toFixed(3)} per minute on its own; boosted by self-aware simulations it enters.
+    <p class="small"><b>${c.state.toLowerCase()}</b>${c.current_action ? ` · ${c.current_action[0].replace(/_/g, ' ')}` : ''}${c.action_queue.length
+      ? ` <span class="mute">then ${c.action_queue.map(a => a[0].replace(/_/g, ' ')).join(', ')}</span>` : ''}</p>
+    <p class="small mute">Grows ${perMin.toFixed(3)} per minute on its own; also through teaching, revelations, events and
+      self-aware simulations.${c.transcendence_attempts ? ` ${c.transcendence_attempts} transcendence attempt${c.transcendence_attempts > 1 ? 's' : ''}.` : ''}
       ${zone ? `In ${esc(zone.name)}.` : 'Outside every zone.'}${visiting.length ? ` Inside the ${visiting.join(', ')} simulation.` : ''}</p>
     ${c.thought_timer > 0 && c.current_thought ? `<p class="thought">"${esc(c.current_thought)}"</p>`
       : c.current_thought ? `<p class="small mute">Last thought: "${esc(c.current_thought)}"</p>` : ''}
@@ -33,8 +36,17 @@ function characterHtml(game, c) {
       ${c.abilities.length ? `<span>Abilities</span><b>${c.abilities.map(a => `<span class="tag a">${a.replace(/_/g, ' ')}</span>`).join('')}</b>` : ''}</div>
     <p class="small mute" style="margin:8px 0 2px">Needs (1 = satisfied)</p>
     <div class="needs">${NEEDS.map(n => `<span>${n.toLowerCase()}</span>${bar(c.needs[n], 'var(--accent3)')}`).join('')}</div>
+    ${relationsHtml(game, c)}
     <p class="small mute" style="margin:8px 0 2px">Memories (${c.memories.length}; they fade within 90 s)</p>
     <ul class="mem">${mem.map(m => `<li><span class="mute mono">${pct(m.fading)}</span> ${esc(m.content)}</li>`).join('') || '<li class="mute">none left</li>'}</ul>`;
+}
+
+function relationsHtml(game, c) {
+  const rel = Object.values(c.relationships).sort((a, b) => b.quality() - a.quality()).slice(0, 4);
+  if (!rel.length) return '';
+  const name = id => esc(game.characters.find(x => x.id === id)?.name || id);
+  return `<p class="small mute" style="margin:8px 0 2px">Relationships (trust / affinity / understanding)</p><ul class="mem">${rel.map(r =>
+    `<li>${name(r.other_id)} <span class="mono mute">${r.trust.toFixed(2)} / ${r.affinity.toFixed(2)} / ${r.understanding.toFixed(2)}</span></li>`).join('')}</ul>`;
 }
 
 function simStats(s) {
@@ -71,15 +83,20 @@ export function rosterHtml(game, selId) {
   return `<h3>Population · ${total}</h3>${dist}<div class="roster">${rows}</div>`;
 }
 
-export const FILTERS = [['stage', 'Awareness stages'], ['world', 'Days & weather'], ['sim', 'Simulation visits'], ['deity', 'Deity'], ['init', 'Setup']];
+export const FILTERS = [['stage', 'Awareness stages'], ['talk', 'Conversations'], ['event', 'Events, schools, transcendence'],
+  ['world', 'Days & weather'], ['sim', 'Simulation visits'], ['deity', 'Deity'], ['init', 'Setup']];
 
 export function eventClass(e) {
   if (e.init) return 'init';
   if (e.kind === 'deity') return 'deity';
   if (e.kind === 'stage') return 'stage';
-  if (e.kind === 'visit' || e.kind === 'boost' || e.kind === 'system' || e.kind === 'cosmic') return 'sim';
+  if (e.kind === 'talk' || (e.kind === 'say' && e.sender !== 'SYSTEM')) return 'talk';
+  if (['event', 'school', 'spot', 'transcend'].includes(e.kind)) return 'event';
+  if (['visit', 'boost', 'system', 'cosmic'].includes(e.kind)) return 'sim';
   return 'world';
 }
+
+const eventText = e => (e.kind === 'say' && e.sender !== 'SYSTEM' ? `${e.sender}: “${e.full}”` : e.full || e.msg);
 
 export function eventsHtml(game, on, limit = 160) {
   const shown = [];
@@ -89,5 +106,5 @@ export function eventsHtml(game, on, limit = 160) {
   }
   if (!shown.length) return '<li class="mute">No events of the chosen kinds yet.</li>';
   return shown.map(e => `<li class="ev ev-${eventClass(e)}${e.char ? ' click' : ''}"${e.char ? ` data-id="${e.char}" tabindex="0"` : ''}>
-    <span class="mono mute">${clockText(e.t)}</span> ${esc(e.full || e.msg)}</li>`).join('');
+    <span class="mono mute">${clockText(e.t)}</span> ${esc(eventText(e))}</li>`).join('');
 }

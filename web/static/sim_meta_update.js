@@ -1,5 +1,6 @@
 // Per-type update rules of the meta-simulations: port of MetaSimulation._update_snake/_life/_ecosystem/_particles/
-// _virtual_reality/_dream/_miniverse (modules/meta_simulations.py), same arithmetic and the same random draws in order.
+// _virtual_reality/_dream/_miniverse (modules/meta_sim_rules.py, meta_sim_cosmos.py), same arithmetic and the same
+// random draws in order.
 import { pymod, pyHashMod } from './py_random.js';
 import { initSnake, newParticle, newDreamEntity, newPlanet, newStar } from './sim_meta.js';
 
@@ -260,9 +261,10 @@ function cosmicEvent(s) {
     const i = R.randrange(s.stars.length), star = s.stars[i];
     star.size = star.size * 10; star.color = [255, 200, 50];
     if (R.random() < 0.5) {
-      for (const pi of star.planets) if (pi < s.planets.length) s.planets.splice(pi, 1);
+      s.planets = s.planets.filter(p => p.orbit_center !== star.position);
       s.stars.splice(i, 1);
-      for (const g of s.galaxies) { const k = g.stars.indexOf(i); if (k >= 0) g.stars.splice(k, 1); }
+      for (const g of s.galaxies) g.stars = g.stars.filter(k => k !== i).map(k => (k < i ? k : k - 1));
+      reindexPlanets(s);
     }
   } else if (kind === 'blackhole' && s.galaxies.length) {
     R.choice(s.galaxies).has_blackhole = true;
@@ -274,7 +276,12 @@ function cosmicEvent(s) {
     const color = [0, 1, 2].map(k => Math.floor((p1.color[k] + p2.color[k]) / 2));
     if (p1.size > p2.size) { p1.size = size; p1.color = color; s.planets.splice(i2, 1); }
     else { p2.size = size; p2.color = color; s.planets.splice(i1, 1); }
+    reindexPlanets(s);
   }
+}
+
+function reindexPlanets(s) {
+  for (const st of s.stars) st.planets = s.planets.flatMap((p, i) => (p.orbit_center === st.position ? [i] : []));
 }
 
 export const UPDATERS = { SNAKE: updateSnake, LIFE: updateLife, ECOSYSTEM: updateEcosystem, PARTICLES: updateParticles,

@@ -1,5 +1,5 @@
 // World of the simulation: zones, day/night cycle, weather and ambient objects. Port of modules/expanded_world.py
-// (Zone, ExpandedWorld, AmbientObject: the update logic; drawing lives in sim_render.js). Every random draw happens
+// and ambient_objects.py (Zone, ExpandedWorld, AmbientObject: the update logic; drawing lives in sim_render.js). Every random draw happens
 // in the same order as the Python code, through the shared PyRandom `R` passed in.
 export const TIMES = ['DAWN', 'MORNING', 'NOON', 'AFTERNOON', 'EVENING', 'NIGHT', 'MIDNIGHT'];
 export const WEATHERS = ['CLEAR', 'CLOUDY', 'RAINY', 'STORMY', 'FOG', 'GLITCH_STORM'];
@@ -150,4 +150,6 @@ export class World {
   }
 
   zoneAt(x, y) { return this.zones.find(z => z.contains(x, y)) || null; }
+  // get_zone_at_position(): pygame.Rect.collidepoint truncates the point's coordinates toward zero.
+  zoneAtPoint(p) { return this.zoneAt(Math.trunc(p[0]), Math.trunc(p[1])); }
 }

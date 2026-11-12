@@ -1,5 +1,5 @@
 // Simulation page: the running world on a canvas with play/pause/step/speed, a seed box and share links, the deity
-// weather power, an inspector, the roster, an awareness timeline and the event log. The engine (sim_engine.js) is the
+// deity powers, an inspector, the roster, an awareness timeline, the world panel (events, schools) and the event log. The engine (sim_engine.js) is the
 // JS port of the Python game; this page only drives and draws it.
 import { route, app, animate, onLeave, $ } from './core.js';
 import { Game, DT } from './sim_engine.js';
@@ -7,7 +7,21 @@ import { drawWorld, pick } from './sim_render.js';
 import { History, drawChart } from './sim_chart.js';
 import { inspectorHtml, rosterHtml, eventsHtml, FILTERS } from './sim_panels.js';
 import { clampSeed, decodeActions, shareHash, clockText } from './share.js';
-import { WEATHER_COOLDOWN } from './sim_powers.js';
+import { COOLDOWNS, TRANSCEND_COOLDOWN } from './sim_deity.js';
+import { worldHtml } from './sim_panels_world.js';
+
+// Deity powers offered on the page, with what each does (modules/deity_powers.py, player_deity.py).
+const POWER_INFO = [
+  ['WEATHER', 'Weather', 'Above 0.7 strength the weather turns stormy or rainy, above 0.4 cloudy or foggy, otherwise clear.'],
+  ['INSPIRE', 'Inspire', 'Plants thoughts: click a character to inspire them directly, or a place for everyone nearby (+awareness).'],
+  ['REVEAL', 'Reveal', 'Raises the awareness of everyone within reach once (0.2 x strength), with a revelation.'],
+  ['CONCEAL', 'Conceal', 'Lowers the awareness of everyone within reach once (0.2 x strength).'],
+  ['MIRACLE', 'Miracle', 'Restores the needs of everyone within reach and leaves a memory of a miracle.'],
+  ['CALAMITY', 'Calamity', 'Drains energy and belonging within reach and shakes reality a little.'],
+  ['ACCELERATE', 'Accelerate', 'Time runs 1-3 times faster for characters within reach.'],
+  ['PAUSE', 'Pause', 'Time nearly stops (a tenth) for characters within reach.'],
+  ['THIN_SPOT', 'Thin spot', 'Opens a new reality thin spot where characters can attempt transcendence (30 s recharge).'],
+];
 
 const SPEEDS = [1, 4, 16, 64];
 const FRAMES_PER_SEC = Math.round(1000 / DT);
@@ -15,7 +29,7 @@ const FRAMES_PER_SEC = Math.round(1000 / DT);
 route('sim', async (args, q) => {
   const seed = clampSeed(q.seed ?? Math.floor(Math.random() * 1e6));
   const S = { seed, actions: decodeActions(q.a), playing: q.t === undefined, speed: SPEEDS.includes(+q.speed) ? +q.speed : 4,
-    mode: 'inspect', power: 0.8, duration: 0.5, spots: false, thoughts: true, follow: false, on: new Set(['stage', 'world', 'deity']) };
+    mode: 'inspect', chosen: 'WEATHER', power: 0.8, duration: 0.5, spots: false, thoughts: true, follow: false, on: new Set(['stage', 'event', 'world', 'deity']) };
   const root = app();
   root.innerHTML = layout(S);
   const game = new Game(seed, { actions: S.actions }), hist = new History();
@@ -83,7 +97,7 @@ route('sim', async (args, q) => {
     const moved = drag?.moved; drag = null;
     if (moved) return;
     const [x, y] = toWorld(e);
-    if (S.mode === 'weather') { castWeather(Math.round(x), Math.round(y)); return; }
+    if (S.mode === 'powers') { castPower(Math.round(x), Math.round(y)); return; }
     sel = pick(game, x, y, 14 / view.z * (canvas.width / canvas.getBoundingClientRect().width));
     dirty = true;
   });
@@ -100,9 +114,12 @@ route('sim', async (args, q) => {
 
   // ---- actions (recorded for share links, applied by the engine on the next frame)
   function record(a) { const act = game.addAction(a); S.actions.push(act); dirty = true; }
-  function castWeather(x, y) {
-    if (game.deity.cooldowns.WEATHER > 0) { flash(`Weather power recharging: ${(game.deity.cooldowns.WEATHER / 1000).toFixed(1)} s`); }
-    record({ kind: 'weather', x, y, power: S.power, duration: S.duration });
+  const cooldownOf = p => (p === 'THIN_SPOT' ? game.deity.transcend_cooldown : game.deity.cooldowns[p]);
+  function castPower(x, y) {
+    const cd = cooldownOf(S.chosen);
+    if (cd > 0) flash(`${S.chosen.replace('_', ' ').toLowerCase()} recharging: ${(cd / 1000).toFixed(1)} s`);
+    if (S.chosen === 'THIN_SPOT') record({ kind: 'thin_spot', x, y, power: S.power, duration: S.duration });
+    else record({ kind: 'power', name: S.chosen, x, y, power: S.power, duration: S.duration });
     if (!S.playing) { game.update(); hist.sample(game); }
   }
   const flash = msg => { const n = $('#flash', root); n.textContent = msg; clearTimeout(flash.t); flash.t = setTimeout(() => { n.textContent = ''; }, 3000); };
@@ -119,7 +136,11 @@ route('sim', async (args, q) => {
   }));
   root.querySelectorAll('#modes button').forEach(b => b.addEventListener('click', () => {
     S.mode = b.dataset.m; root.querySelectorAll('#modes button').forEach(x => x.classList.toggle('on', x === b));
-    $('#weatherctl', root).hidden = S.mode !== 'weather'; canvas.classList.toggle('aim', S.mode === 'weather');
+    $('#powerctl', root).hidden = S.mode !== 'powers'; canvas.classList.toggle('aim', S.mode === 'powers');
+  }));
+  root.querySelectorAll('#powers button').forEach(b => b.addEventListener('click', () => {
+    S.chosen = b.dataset.p; root.querySelectorAll('#powers button').forEach(x => x.classList.toggle('on', x === b));
+    $('#powerinfo', root).textContent = POWER_INFO.find(p => p[0] === S.chosen)[2]; dirty = true;
   }));
   const go = s => { location.hash = `#/sim?seed=${clampSeed(s)}&speed=${S.speed}`; };
   $('#seedform', root).addEventListener('submit', e => { e.preventDefault(); go($('#seed', root).value); });
@@ -169,8 +190,9 @@ route('sim', async (args, q) => {
       const w = game.world;
       status.innerHTML = `<b>${clockText(game.ticks())}</b> · ${w.time_of_day.toLowerCase()} · ${w.weather.toLowerCase().replace('_', ' ')}
         <span class="mute">· frame ${game.step} · seed ${seed}</span>`;
-      const cd = game.deity.cooldowns.WEATHER;
-      $('#cool', root).textContent = cd > 0 ? `recharging ${(cd / 1000).toFixed(1)} s of ${WEATHER_COOLDOWN / 1000}` : 'ready';
+      const cd = cooldownOf(S.chosen), full = S.chosen === 'THIN_SPOT' ? TRANSCEND_COOLDOWN : COOLDOWNS[S.chosen];
+      $('#cool', root).textContent = cd > 0 ? `recharging ${(cd / 1000).toFixed(1)} s of ${full / 1000}` : 'ready';
+      $('#worldpanel', root).innerHTML = worldHtml(game);
       panels.insp.innerHTML = inspectorHtml(game, sel);
       panels.roster.innerHTML = rosterHtml(game, sel?.id);
       const key = [...S.on].join();
@@ -184,8 +206,9 @@ route('sim', async (args, q) => {
 function layout(S) {
   return `<p class="kicker">Live simulation · JS port of the Python game</p>
   <h1 class="glow">The simulation</h1>
-  <p class="lead">Fifteen characters in a world of six zones and five simulations-within-the-simulation. Their awareness
-    of being simulated grows over time and through contact with self-aware simulations. Same seed, same run as Python.</p>
+  <p class="lead">Fifteen characters in a world of six zones and five simulations-within-the-simulation. They rest, explore,
+    talk, teach and argue, form philosophical schools, live through world events and, once aware enough, try to break
+    out. Same seed, same run as Python.</p>
   <div class="toolbar">
     <button id="play" aria-pressed="false">Play</button><button id="step" class="alt" title="One frame (16 ms); key '.'">Step</button>
     <button id="step1s" class="alt" title="One second of game time">+1 s</button>
@@ -199,22 +222,23 @@ function layout(S) {
     <div>
       <div class="stage"><canvas id="world" tabindex="0" aria-label="World map: zones, simulations and characters. Click to inspect; arrow keys pan when zoomed."></canvas></div>
       <div class="toolbar small">
-        <span class="seg" id="modes" role="group" aria-label="Click mode"><button data-m="inspect" class="on">Inspect</button><button data-m="weather">Weather power</button></span>
+        <span class="seg" id="modes" role="group" aria-label="Click mode"><button data-m="inspect" class="on">Inspect</button><button data-m="powers">Deity powers</button></span>
         <button id="zin" class="alt" aria-label="Zoom in">+</button><button id="zout" class="alt" aria-label="Zoom out">−</button><button id="zfit" class="alt" title="Frame the zones">Fit</button><button id="zall" class="alt" title="The whole 5000 x 3000 map">Map</button>
         <label class="inl"><input type="checkbox" id="follow"> follow selected</label>
         <label class="inl"><input type="checkbox" id="thoughts" checked> thoughts</label>
         <label class="inl"><input type="checkbox" id="spots"> reveal thin spots</label>
       </div>
-      <div id="weatherctl" class="panel weatherctl" hidden>
-        <p class="small">Click the map to use the deity <b>weather power</b> there (the one power <code>player_deity.py</code>
-          implements). Above 0.7 the weather turns stormy or rainy, above 0.4 maybe cloudy; aware characters (8+) nearby
-          may notice you. Status: <b id="cool">ready</b>.</p>
-        <div class="row"><div><label for="power">Power <b id="powerv">${S.power.toFixed(2)}</b></label><input id="power" type="range" min="0" max="1" step="0.05" value="${S.power}"></div>
+      <div id="powerctl" class="panel powerctl" hidden>
+        <div class="seg" id="powers" role="group" aria-label="Deity power">${POWER_INFO.map(([k, l]) =>
+          `<button data-p="${k}" class="${k === S.chosen ? 'on' : ''}">${l}</button>`).join('')}</div>
+        <p class="small"><span id="powerinfo">${POWER_INFO[0][2]}</span> Click the map to use it. Status: <b id="cool">ready</b>.
+          Characters aware above 8 may notice you.</p>
+        <div class="row"><div><label for="power">Strength <b id="powerv">${S.power.toFixed(2)}</b></label><input id="power" type="range" min="0" max="1" step="0.05" value="${S.power}"></div>
           <div><label for="dur">Duration <b id="durv">${(5 + 15 * S.duration).toFixed(1)} s</b></label><input id="dur" type="range" min="0" max="1" step="0.05" value="${S.duration}"></div></div>
       </div>
       <div class="panel"><h3>Awareness over time</h3><canvas id="chart" class="chart" role="img" aria-label="Line chart of each character's awareness level over time with stage thresholds"></canvas></div>
     </div>
-    <aside><div class="panel" id="inspector"></div><div class="panel" id="roster"></div></aside>
+    <aside><div class="panel" id="inspector"></div><div class="panel" id="worldpanel"></div><div class="panel" id="roster"></div></aside>
   </div>
   <div class="panel"><h3>Event log</h3>
     <div id="filters" class="filters">${FILTERS.map(([k, l]) => `<label class="inl"><input type="checkbox" value="${k}" ${S.on.has(k) ? 'checked' : ''}> ${l}</label>`).join('')}</div>
