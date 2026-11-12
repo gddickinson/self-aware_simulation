@@ -257,6 +257,9 @@ class EnhancedCharacter:
         self.memory_access_speed = random.uniform(0.8, 1.2)  # Multiplier for recall speed
 
 
+        # Base chance of having a thought each update (set before traits: Introspective doubles it)
+        self.thought_probability = 0.01
+
         # Personality traits
         self.traits = self._generate_random_traits()
 
@@ -271,7 +274,6 @@ class EnhancedCharacter:
         # Thought system
         self.current_thought = ""
         self.thought_timer = 0
-        self.thought_probability = 0.01  # Base chance of having a thought each update
         self.thoughts_by_awareness = self._initialize_thoughts()
 
         # Action history

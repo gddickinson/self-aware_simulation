@@ -116,3 +116,20 @@ def test_intergalactic_star_not_added_to_a_galaxy(monkeypatch):
     sim._update_miniverse(16)
     assert len(sim.stars) == n_stars + 1
     assert all(n_stars not in g["stars"] for g in sim.galaxies)
+
+
+def test_introspective_trait_doubles_thought_probability(capsys):
+    """Traits are applied before thought_probability was set, so 'Introspective' failed with a printed warning and
+    had no effect."""
+    from modules.enhanced_character import EnhancedCharacter
+    world = ExpandedWorld(5000, 3000)
+    seen = 0
+    for seed in range(40):
+        random.seed(seed)
+        c = EnhancedCharacter("T", "t", [0, 0], world, None)
+        if "Introspective" in [t.name for t in c.traits]:
+            seen += 1
+            assert c.thought_probability == 0.02
+        else:
+            assert c.thought_probability == 0.01
+    assert seen and "Could not apply trait" not in capsys.readouterr().out
