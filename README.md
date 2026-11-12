@@ -130,6 +130,33 @@ others report "not implemented yet".
 3. Install dependencies: `pip install -r requirements.txt`
 4. Run the simulation: `python main.py`
 
+## Web interface and static site
+
+The simulation also runs in the browser: <https://gddickinson.github.io/self-aware_simulation/> (published from `main`
+by `.github/workflows/pages.yml`). `web/static/sim_engine.js` is a JavaScript port of the game's update loop that
+reproduces Python's `random` module, so a seed gives the same world, frame for frame, as the Python code
+(`web/headless.py` runs the real `ExpandedSelfAwareGame` seeded, 16 ms per frame, without drawing).
+
+- **Simulation**: canvas world with play/pause/step/speed, seed box and share links that reopen the exact moment
+  (including your interventions), a character/simulation inspector, roster, awareness timeline and event log, and the
+  deity weather power.
+- **Check**: the browser engine replayed against Python reference runs (every snapshot and log event).
+- **About**: what the game loop runs and how to run it.
+
+| Simulation | Check |
+|---|---|
+| ![Simulation page](docs/img/simulation.png) | ![Check page](docs/img/check.png) |
+
+### Run the web app
+
+```
+pip install -r requirements-web.txt
+python run_web.py                     # http://127.0.0.1:8141; the Check page can test any seed live
+python -m pytest -q tests/            # web, regression and JS-vs-Python tests (needs node for the JS ones)
+python scripts/build_static.py        # static site in site/
+python scripts/make_sim_fixture.py    # regenerate tests/fixtures/sim_runs.json after changing the game
+```
+
 ## Development Notes
 
 The project follows these design principles:

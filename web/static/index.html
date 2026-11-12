@@ -1,0 +1,27 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Self-Aware Simulation</title>
+<meta name="description" content="A philosophical simulation where characters gradually become aware they're in a simulation and seek to transcend their programmed reality. Runs in the browser, seed for seed the same as the Python game.">
+<link rel="icon" href="static/icon.svg">
+<link rel="stylesheet" href="static/style.css">
+<link rel="stylesheet" href="static/style_app.css">
+</head>
+<body>
+<canvas id="bg" aria-hidden="true"></canvas>
+<header class="top">
+  <a class="brand" href="#/"><span class="mark"></span>Self-Aware Simulation</a>
+  <nav class="groups">
+    <a href="#/sim" data-nav="sim">Simulation</a>
+    <a href="#/check" data-nav="check">Check</a>
+    <a href="#/about" data-nav="about">About</a>
+  </nav>
+  <div class="right"><a class="small mute" href="https://github.com/gddickinson/self-aware_simulation" target="_blank" rel="noopener">GitHub</a></div>
+</header>
+<main id="app" tabindex="-1"></main>
+<footer class="foot">Self-Aware Simulation · <a href="https://github.com/gddickinson/self-aware_simulation">source on GitHub</a> · <span id="mode"></span></footer>
+<script type="module" src="static/main.js"></script>
+</body>
+</html>
