@@ -165,3 +165,21 @@ def test_supernova_removes_exactly_its_own_planets(monkeypatch):
     for s in sim.stars:
         assert all(sim.planets[i]["orbit_center"] is s["position"] for i in s["planets"])
     assert all(0 <= i < len(sim.stars) for g in sim.galaxies for i in g["stars"])
+
+
+def test_inspiration_lights_move_to_their_target():
+    """Inspire's light bulbs checked `target_id in affected_entities` (an id against character objects), so they
+    never moved toward the inspired character."""
+    from modules.enhanced_character import EnhancedCharacter
+    from modules.player_deity import DeityPower, DeityInterfaceMode
+    world, deity = _deity()
+    char = EnhancedCharacter("A", "a", [600, 400], world, None)
+    deity.ui_elements["sliders"]["power"]["value"] = 0.8
+    deity.current_mode = DeityInterfaceMode.INSPIRE
+    deity._handle_world_interaction((610, 420), [char])
+    action = deity.active_actions[0]
+    assert action.power_type == DeityPower.INSPIRE and action.target_id == "a"
+    start = list(action.visual_effects[0]["position"])
+    for _ in range(3):
+        deity.update(16, [char])
+    assert action.visual_effects[0]["position"] != start

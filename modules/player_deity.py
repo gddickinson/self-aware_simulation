@@ -159,7 +159,7 @@ class PlayerDeitySystem(DeityUIMixin, DeityPowersMixin):
                 effect['size'] = 15 + 5 * math.sin(effect['pulse'])
 
                 # Move toward target if there is one
-                if action.target_id and action.target_id in action.affected_entities:
+                if action.target_id:
                     target_entity = self._find_entity_by_id(action.target_id, action.affected_entities)
                     if target_entity:
                         # Move toward target's head
