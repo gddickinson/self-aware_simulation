@@ -103,7 +103,7 @@ class _ScriptedRandom:
 def test_intergalactic_star_not_added_to_a_galaxy(monkeypatch):
     """_update_miniverse() appended every new star to galaxy['stars'], using the loop variable left over from the
     galaxy-rotation loop when the star was placed in intergalactic space (so it joined the last galaxy)."""
-    from modules import meta_simulations
+    from modules import meta_sim_cosmos
     from modules.meta_simulations import MetaSimulation, SimulationType
     random.seed(1)
     sim = MetaSimulation(SimulationType.MINIVERSE, [0, 0], (350, 250), None)
@@ -111,7 +111,7 @@ def test_intergalactic_star_not_added_to_a_galaxy(monkeypatch):
         planet["has_life"] = False
     n_galaxies = len(sim.galaxies)
     # galaxy rotation checks, then "add a star" (yes), then "in a galaxy" (no: intergalactic)
-    monkeypatch.setattr(meta_simulations, "random", _ScriptedRandom([0.5] * n_galaxies + [0.0, 0.9]))
+    monkeypatch.setattr(meta_sim_cosmos, "random", _ScriptedRandom([0.5] * n_galaxies + [0.0, 0.9]))
     n_stars = len(sim.stars)
     sim._update_miniverse(16)
     assert len(sim.stars) == n_stars + 1
@@ -138,7 +138,7 @@ def test_introspective_trait_doubles_thought_probability(capsys):
 def test_supernova_removes_exactly_its_own_planets(monkeypatch):
     """A supernova popped planets by index while the list shrank (removing the wrong planets, or raising), and left
     stale star and planet indices behind."""
-    from modules import meta_simulations
+    from modules import meta_sim_cosmos
     from modules.meta_simulations import MetaSimulation, SimulationType
     random.seed(4)
     sim = MetaSimulation(SimulationType.MINIVERSE, [0, 0], (350, 250), None)
@@ -158,7 +158,7 @@ def test_supernova_removes_exactly_its_own_planets(monkeypatch):
         def randrange(self, n):
             return star_index
     # galaxy checks (5), add star (no), add planet (no), cosmic event (yes), then "remove the star" (yes)
-    monkeypatch.setattr(meta_simulations, "random", Script([0.5] * 5 + [0.9, 0.9, 0.0, 0.0]))
+    monkeypatch.setattr(meta_sim_cosmos, "random", Script([0.5] * 5 + [0.9, 0.9, 0.0, 0.0]))
     sim._update_miniverse(16)
     assert star not in sim.stars and sim.planets == keep
     for s in sim.stars:
