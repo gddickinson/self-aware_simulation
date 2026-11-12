@@ -61,22 +61,30 @@ def _sim_clock(clock):
 
 
 def apply_action(game, action):
-    """User actions the web page offers, applied before the frame they are scheduled for (same code path as clicks).
+    """User actions the web page offers, applied before the frame they are scheduled for (the same code path as
+    clicking a power button and then the world).
 
-    weather: activate the WEATHER power (refused while on cooldown) and click the world at (x, y) with the power and
-             duration sliders set; pause: click a meta-simulation to pause or resume it.
+    power: a deity power by name at (x, y) with the power and duration sliders set (refused while on cooldown);
+    thin_spot: TRANSCEND mode click; pause: click a meta-simulation to pause or resume it.
+    ("weather" is the older form of power WEATHER, kept for share links.)
     """
-    from modules.player_deity import DeityPower
-    if action["kind"] == "weather":
-        deity = game.player_deity
-        if deity.cooldowns[DeityPower.WEATHER] > 0:
-            deity._activate_power(DeityPower.WEATHER, (0, 0), game.characters)   # posts the cooldown message
-            return
+    from modules.player_deity import DeityPower, DeityInterfaceMode
+    deity = game.player_deity
+    kind = action["kind"]
+    if kind in ("power", "weather", "thin_spot"):
         deity.ui_elements["sliders"]["power"]["value"] = float(action["power"])
         deity.ui_elements["sliders"]["duration"]["value"] = float(action["duration"])
-        deity._activate_power(DeityPower.WEATHER, (0, 0), game.characters)
+    if kind in ("power", "weather"):
+        power = DeityPower[action.get("name", "WEATHER")]
+        if deity.cooldowns[power] > 0:
+            deity._activate_power(power, (0, 0), game.characters)   # posts the cooldown message
+            return
+        deity._activate_power(power, (0, 0), game.characters)
         deity._handle_world_interaction((action["x"], action["y"]), game.characters)
-    elif action["kind"] == "pause":
+    elif kind == "thin_spot":
+        deity._set_mode(DeityInterfaceMode.TRANSCEND)
+        deity._handle_world_interaction((action["x"], action["y"]), game.characters)
+    elif kind == "pause":
         sim = game.simulations[int(action["sim"])]
         sim.is_paused = not sim.is_paused
 

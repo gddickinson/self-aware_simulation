@@ -22,6 +22,11 @@ from modules.transcendence import TranscendenceManager, TranscendenceState, Real
 from modules.player_deity import PlayerDeitySystem, DeityPower, DeityInterfaceMode
 from modules.meta_simulations import MetaSimulation, SimulationType
 from modules.dialogue import DialogueSystem
+from modules.character_interactions import InteractionSystem
+from modules.event_manager import EventManager
+from game_setup import create_initial_characters, create_initial_simulations
+from game_input import GameInputMixin
+from game_modes import GameMode, CameraMode  # noqa: F401
 
 # Import extracted modules
 import rendering
@@ -39,22 +44,7 @@ logging.basicConfig(
 logger = logging.getLogger("expanded_main")
 
 
-class GameMode(Enum):
-    """Different game modes for the simulation."""
-    STANDARD = 0
-    SANDBOX = 1
-    STORY = 2
-    OBSERVER = 3
-
-
-class CameraMode(Enum):
-    """Different camera modes."""
-    FREE = 0
-    FOLLOW = 1
-    OVERVIEW = 2
-
-
-class ExpandedSelfAwareGame:
+class ExpandedSelfAwareGame(GameInputMixin):
     """Main game class for the expanded self-aware simulation."""
 
     def __init__(self):
@@ -106,14 +96,22 @@ class ExpandedSelfAwareGame:
 
         # Create characters
         self.characters = []
-        self._create_initial_characters()
+        create_initial_characters(self)
 
         # Create meta-simulations
         self.simulations = []
-        self._create_initial_simulations()
+        create_initial_simulations(self)
 
         # Create dialogue system
         self.dialogue = DialogueSystem(self.screen, (self.width // 2, self.height - 100))
+
+        # Character interactions, philosophical schools and world events
+        self.interaction_system = InteractionSystem(self.dialogue)
+        self.event_manager = EventManager(self.world, self.transcendence_manager, self.dialogue,
+                                          self.interaction_system.philosophical_schools)
+        for character in self.characters:
+            character.interaction_system = self.interaction_system
+            character.transcendence_manager = self.transcendence_manager
 
         # UI state
         self.ui_state = {
@@ -157,107 +155,6 @@ class ExpandedSelfAwareGame:
             self.small_font = pygame.font.Font(None, 18)
             self.large_font = pygame.font.Font(None, 36)
 
-    def _create_initial_characters(self):
-        """Create the initial set of characters."""
-        names = [
-            "Alex", "Blake", "Casey", "Dana", "Elliot", "Finley",
-            "Gale", "Harper", "Indigo", "Jordan", "Kai", "Logan",
-            "Morgan", "Nico", "Oakley", "Parker", "Quinn", "Riley",
-            "Sage", "Taylor", "Umber", "Val", "Winter", "Xander",
-            "Yael", "Zephyr"
-        ]
-
-        sprite_sheet = getattr(self, 'character_sprite_sheet', None)
-
-        for i in range(15):
-            zones = list(self.world.zones.values())
-            zone = random.choice(zones)
-
-            pos_x = zone.position[0] + random.randint(50, zone.size[0] - 50)
-            pos_y = zone.position[1] + random.randint(50, zone.size[1] - 50)
-
-            name = random.choice(names)
-            names.remove(name)
-
-            character_id = f"char_{i}"
-
-            character = EnhancedCharacter(
-                name, character_id, [pos_x, pos_y],
-                self.world, sprite_sheet
-            )
-
-            self.characters.append(character)
-
-            character.add_memory(
-                f"I remember appearing in the {zone.name} area.",
-                importance=0.7,
-                emotional_tags={"confusion": 0.5, "curiosity": 0.7}
-            )
-
-            self.logger.info(f"Created character: {name} in {zone.name}")
-
-        # Ensure diverse distribution of awareness levels
-        awareness_distribution = [
-            (0.1, 0.5), (0.5, 2.0), (2.0, 4.0), (4.0, 6.0), (6.0, 8.0),
-        ]
-        weights = [30, 30, 20, 15, 5]
-
-        for character in self.characters:
-            range_index = random.choices(
-                range(len(awareness_distribution)), weights=weights, k=1
-            )[0]
-            min_val, max_val = awareness_distribution[range_index]
-            character.awareness_level = random.uniform(min_val, max_val)
-            character._update_awareness_stage()
-
-    def _create_initial_simulations(self):
-        """Create the initial set of meta-simulations."""
-        for zone_id, zone in self.world.zones.items():
-            if zone.zone_type == ZoneType.COMMERCIAL:
-                pos_x = zone.position[0] + random.randint(50, zone.size[0] - 150)
-                pos_y = zone.position[1] + random.randint(50, zone.size[1] - 150)
-                vr_sim = MetaSimulation(
-                    SimulationType.VIRTUAL_REALITY, [pos_x, pos_y], (300, 200), None
-                )
-                self.simulations.append(vr_sim)
-                self.logger.info(f"Created VR simulation in {zone.name}")
-
-            elif zone.zone_type == ZoneType.RECREATIONAL:
-                pos_x = zone.position[0] + random.randint(50, zone.size[0] - 150)
-                pos_y = zone.position[1] + random.randint(50, zone.size[1] - 150)
-                life_sim = MetaSimulation(
-                    SimulationType.LIFE, [pos_x, pos_y], (200, 200), None
-                )
-                pos_x = zone.position[0] + random.randint(50, zone.size[0] - 150)
-                pos_y = zone.position[1] + random.randint(50, zone.size[1] - 150)
-                snake_sim = MetaSimulation(
-                    SimulationType.SNAKE, [pos_x, pos_y], (300, 300), None
-                )
-                self.simulations.append(life_sim)
-                self.simulations.append(snake_sim)
-                self.logger.info(f"Created Life and Snake simulations in {zone.name}")
-
-            elif zone.zone_type == ZoneType.MYSTERIOUS:
-                pos_x = zone.position[0] + random.randint(50, zone.size[0] - 150)
-                pos_y = zone.position[1] + random.randint(50, zone.size[1] - 150)
-                sim_type = random.choice([SimulationType.PARTICLES, SimulationType.ECOSYSTEM])
-                simulation = MetaSimulation(
-                    sim_type, [pos_x, pos_y], (300, 200), None
-                )
-                self.simulations.append(simulation)
-                self.logger.info(f"Created {sim_type.name} simulation in {zone.name}")
-
-            elif zone.zone_type == ZoneType.TRANSCENDENCE:
-                pos_x = zone.position[0] + random.randint(50, zone.size[0] - 150)
-                pos_y = zone.position[1] + random.randint(50, zone.size[1] - 150)
-                sim_type = random.choice([SimulationType.DREAM, SimulationType.MINIVERSE])
-                simulation = MetaSimulation(
-                    sim_type, [pos_x, pos_y], (350, 250), None
-                )
-                simulation.awareness_level = random.uniform(3.0, 5.0)
-                self.simulations.append(simulation)
-                self.logger.info(f"Created {sim_type.name} simulation in {zone.name}")
-
     def run(self):
         """Main game loop."""
         self.logger.info("Starting expanded game loop")
@@ -291,138 +188,6 @@ class ExpandedSelfAwareGame:
             pygame.quit()
             sys.exit()
 
-    def handle_events(self):
-        """Process game events and user input."""
-        for event in pygame.event.get():
-            if event.type == QUIT:
-                self.running = False
-
-            elif event.type == KEYDOWN:
-                self._handle_key_press(event)
-
-            elif event.type in (MOUSEBUTTONDOWN, MOUSEMOTION, MOUSEBUTTONUP):
-                mouse_pos = pygame.mouse.get_pos()
-
-                if self.player_deity.handle_event(event, mouse_pos, self.characters):
-                    continue
-                if self.dialogue.handle_event(event):
-                    continue
-                self._handle_mouse_event(event, mouse_pos)
-
-    def _handle_key_press(self, event):
-        """Handle keyboard input."""
-        if event.key == K_p:
-            self.paused = not self.paused
-            status = "paused" if self.paused else "resumed"
-            self.logger.info(f"Game {status}")
-
-        elif event.key == K_d and pygame.key.get_mods() & pygame.KMOD_SHIFT:
-            self.ui_state["show_debug"] = not self.ui_state["show_debug"]
-
-        elif event.key == K_z:
-            self.ui_state["show_awareness_levels"] = not self.ui_state["show_awareness_levels"]
-
-        elif event.key == K_t:
-            self.ui_state["show_transcendence_info"] = not self.ui_state["show_transcendence_info"]
-
-        elif event.key == K_LEFTBRACKET:
-            self.camera_zoom = max(0.5, self.camera_zoom - 0.1)
-        elif event.key == K_RIGHTBRACKET:
-            self.camera_zoom = min(2.0, self.camera_zoom + 0.1)
-
-        elif event.key == K_c:
-            modes = list(CameraMode)
-            current_index = modes.index(self.camera_mode)
-            next_index = (current_index + 1) % len(modes)
-            self.camera_mode = modes[next_index]
-            self.logger.info(f"Camera mode switched to {self.camera_mode.name}")
-
-        elif self.camera_mode == CameraMode.FREE:
-            if event.key == K_w:
-                self.camera_pos[1] -= 100
-            elif event.key == K_s:
-                self.camera_pos[1] += 100
-            elif event.key == K_a:
-                self.camera_pos[0] -= 100
-            elif event.key == K_d:
-                self.camera_pos[0] += 100
-
-    def _handle_mouse_event(self, event, mouse_pos):
-        """Handle mouse input."""
-        if event.type == MOUSEBUTTONDOWN:
-            if event.button == 1:
-                clicked_character = self._find_character_at_screen_pos(mouse_pos)
-                if clicked_character:
-                    self.ui_state["selected_character_id"] = clicked_character.id
-                    self.ui_state["show_character_info"] = True
-                    if self.camera_mode == CameraMode.FOLLOW:
-                        self.camera_target = clicked_character
-                    self.logger.info(f"Selected character: {clicked_character.name}")
-                    return
-
-                clicked_simulation = self._find_simulation_at_screen_pos(mouse_pos)
-                if clicked_simulation:
-                    clicked_simulation.is_paused = not clicked_simulation.is_paused
-                    status = "paused" if clicked_simulation.is_paused else "resumed"
-                    self.logger.info(f"Simulation {status}")
-                    return
-
-            elif event.button == 3:
-                self.ui_state["selected_character_id"] = None
-                self.ui_state["show_character_info"] = False
-                if self.camera_mode == CameraMode.FOLLOW:
-                    self.camera_target = None
-                return
-
-            elif event.button == 4:
-                self.camera_zoom = min(2.0, self.camera_zoom + 0.1)
-            elif event.button == 5:
-                self.camera_zoom = max(0.5, self.camera_zoom - 0.1)
-
-        elif event.type == MOUSEMOTION:
-            if pygame.mouse.get_pressed()[1]:
-                rel_x, rel_y = pygame.mouse.get_rel()
-                self.camera_pos[0] -= rel_x / self.camera_zoom
-                self.camera_pos[1] -= rel_y / self.camera_zoom
-
-    def _find_character_at_screen_pos(self, screen_pos):
-        """Find a character at the given screen position."""
-        world_pos = self._screen_to_world(screen_pos)
-        for character in self.characters:
-            char_rect = pygame.Rect(
-                character.position[0], character.position[1],
-                character.size[0], character.size[1]
-            )
-            if char_rect.collidepoint(world_pos):
-                return character
-        return None
-
-    def _find_simulation_at_screen_pos(self, screen_pos):
-        """Find a simulation at the given screen position."""
-        world_pos = self._screen_to_world(screen_pos)
-        for simulation in self.simulations:
-            sim_rect = pygame.Rect(
-                simulation.position[0], simulation.position[1],
-                simulation.size[0], simulation.size[1]
-            )
-            if sim_rect.collidepoint(world_pos):
-                return simulation
-        return None
-
-    def _screen_to_world(self, screen_pos):
-        """Convert screen coordinates to world coordinates."""
-        x, y = screen_pos
-        world_x = self.camera_pos[0] + x / self.camera_zoom
-        world_y = self.camera_pos[1] + y / self.camera_zoom
-        return (world_x, world_y)
-
-    def _world_to_screen(self, world_pos):
-        """Convert world coordinates to screen coordinates."""
-        x, y = world_pos
-        screen_x = (x - self.camera_pos[0]) * self.camera_zoom
-        screen_y = (y - self.camera_pos[1]) * self.camera_zoom
-        return (screen_x, screen_y)
-
     def update(self, delta_time):
         """Update game state."""
         self.world.update(delta_time)
@@ -430,8 +195,13 @@ class ExpandedSelfAwareGame:
         self.player_deity.update(delta_time, self.characters)
 
         for character in self.characters:
-            character.update(delta_time, self.characters)
+            # Deity powers can speed up or slow down time around a character
+            local_time = delta_time * self.player_deity.time_multiplier_at(character.position)
+            character.update(local_time, self.characters)
             self._check_character_simulation_interactions(character)
+
+        self.interaction_system.update(delta_time)
+        self.event_manager.update(delta_time, self.characters)
 
         for simulation in self.simulations:
             simulation.update(delta_time)
@@ -547,6 +317,8 @@ class ExpandedSelfAwareGame:
         rendering.render_zones(self, render_surface)
         rendering.render_simulations(self, render_surface)
         rendering.render_transcendence_effects(self, render_surface)
+        for effect in self.event_manager.particle_effects:
+            effect.render(render_surface, self.camera_pos)
         rendering.render_characters(self, render_surface)
 
         if self.camera_zoom != 1.0:

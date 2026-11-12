@@ -7,6 +7,8 @@ import pygame
 import time
 import logging
 from collections import deque
+
+from modules.character_parts import Relationship  # noqa: F401  (was duplicated here)
 import random
 
 logger = logging.getLogger("dialogue")
@@ -465,66 +467,3 @@ class DialogueSystem:
             importance=0.6,
             emotional_tags={"social": 0.7, "connection": 0.6}
         )
-
-class Relationship:
-    """Relationship between two characters."""
-
-    def __init__(self, other_character_id):
-        """Initialize a relationship.
-
-        Args:
-            other_character_id (str): ID of the other character
-        """
-        self.other_id = other_character_id
-
-        # Relationship dimensions from -1.0 to 1.0
-        self.trust = 0.0
-        self.affinity = 0.0
-        self.understanding = 0.0
-        self.shared_experiences = []
-        self.last_interaction = 0
-
-    def update_from_interaction(self, interaction_type, outcome):
-        """Update relationship based on an interaction.
-
-        Args:
-            interaction_type (str): Type of interaction
-            outcome (float): Outcome value (-1.0 to 1.0)
-        """
-        # Adjust dimensions based on interaction
-        if interaction_type == "conversation":
-            self.affinity += outcome * 0.1
-            self.understanding += abs(outcome) * 0.05
-
-        elif interaction_type == "help":
-            self.trust += outcome * 0.15
-            self.affinity += outcome * 0.1
-
-        elif interaction_type == "conflict":
-            self.trust -= abs(outcome) * 0.1
-            self.affinity -= abs(outcome) * 0.1
-            self.understanding += outcome * 0.05  # Can increase understanding even in conflict
-
-        # Clamp values
-        self.trust = max(-1.0, min(1.0, self.trust))
-        self.affinity = max(-1.0, min(1.0, self.affinity))
-        self.understanding = max(0.0, min(1.0, self.understanding))
-
-        # Update last interaction time
-        self.last_interaction = pygame.time.get_ticks()
-
-    def add_shared_experience(self, experience):
-        """Add a shared experience to the relationship.
-
-        Args:
-            experience (str): Description of the shared experience
-        """
-        self.shared_experiences.append({
-            "description": experience,
-            "time": pygame.time.get_ticks()
-        })
-
-    def get_overall_quality(self):
-        """Get the overall relationship quality as a single value."""
-        # Weight the different dimensions
-        return (self.trust * 0.4) + (self.affinity * 0.4) + (self.understanding * 0.2)

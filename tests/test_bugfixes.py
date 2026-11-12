@@ -75,7 +75,8 @@ def test_world_click_in_any_deity_mode_does_not_crash():
         deity.handle_event(click, (600, 400), chars)
     assert deity.selected_entity_id == "a"
     texts = [m["text"] for m in deity.ui_elements["message_log"]["messages"]]
-    assert any("not implemented" in t for t in texts)
+    assert not any("not implemented" in t for t in texts)
+    assert {a.power_type.name for a in deity.active_actions} >= {"WEATHER", "INSPIRE", "REVEAL", "MIRACLE", "ACCELERATE"}
 
 
 class _ScriptedRandom:
