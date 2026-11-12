@@ -386,9 +386,9 @@ class ExpandedWorld:
         # Choose a random edge (0=top, 1=right, 2=bottom, 3=left)
         edge = random.randint(0, 3)
 
-        # Camera view bounds
-        view_left = self.camera_pos[0]
-        view_top = self.camera_pos[1]
+        # Camera view bounds (whole pixels: random.randint() rejects floats on Python >= 3.12)
+        view_left = int(self.camera_pos[0])
+        view_top = int(self.camera_pos[1])
         view_right = view_left + 1200  # Assuming screen width
         view_bottom = view_top + 800   # Assuming screen height
 
