@@ -55,35 +55,49 @@ The simulation world consists of:
 
 ## Transcendence Mechanics
 
-As characters become more aware, they can:
+As characters become more aware:
 
-1. **Perceive the Code**: See the underlying patterns of reality
-2. **Manipulate Reality**: Bend simulation rules in small ways
-3. **Find Thin Spots**: Locate areas where reality is more malleable
-4. **Attempt Transcendence**: Try to break free of simulation constraints
-5. **Transcend Boundaries**: Move between different layers of the simulation
+1. **Abilities**: reaching AWARE, TRANSCENDING and TRANSCENDED adds the abilities "reality perception", "minor
+   reality manipulation" and "major reality manipulation" to a character (recorded and shown; they have no effect yet)
+2. **Find Thin Spots**: characters questioning reality (awareness 4+) walk to the nearest reality thin spot and observe
+3. **Attempt Transcendence**: characters attempt it when questioning reality at awareness 8+, when their transcendence
+   need is critical at awareness 6+, and during transcendence waves; below 8 an attempt always fails. The chance rises
+   with awareness, falls with reality stability, and is higher inside a thin spot (which then becomes more discovered)
+4. **Guided Transcendence**: two characters averaging above 8 can hold a transcendence interaction that may lift one
+   into the TRANSCENDING stage
+
+A successful attempt marks the character as transcended and lowers reality stability; there are no other layers of
+the simulation to move between.
 
 ## Player Deity System
 
-Players can influence the simulation through:
+Choose a power with the buttons along the top of the window, then click the world (each power has a cooldown;
+characters aware above 8 near an active power may notice you):
 
-- **Weather Control**: Change environmental conditions
-- **Inspiration**: Plant thoughts and ideas in characters
-- **Reality Manipulation**: Create miracles (restore needs) or calamities (drain them, shake reality)
-- **Time Control**: Accelerate or nearly pause local time
-- **Thin Spots**: Open new reality thin spots where characters can attempt transcendence
-- **Revelation Powers**: Reveal or conceal the simulated nature of reality
+- **Weather**: strength above 0.7 makes it stormy or rainy, above 0.4 cloudy or foggy, otherwise clear
+- **Inspire**: on a character, plants a thought in them; on a place, slightly raises the awareness of characters nearby
+- **Reveal / Conceal**: raises / lowers the awareness of everyone within reach, once per character
+- **Miracle / Calamity**: restores everyone's needs / drains energy and belonging and lowers reality stability
+- **Accelerate / Pause**: time runs 1-3 times faster / at a tenth for characters within reach
+- **Transcend mode** (mode buttons on the right): opens a new reality thin spot where you click (30 s recharge)
+
+Gift, Terraform, Transmute, Summon, Banish and Meta were listed by the original code without any behaviour and have
+been removed.
 
 ## Meta-Simulations
 
-The game features "simulations within the simulation":
+The game features "simulations within the simulation", each growing its own self-awareness:
 
-- **Snake Game**: Classic snake game where entities can become aware and escape
-- **Game of Life**: Conway's Game of Life with emergent patterns
-- **Particle System**: Physics simulation with interacting particles
-- **Virtual Reality**: A VR system characters can "jack into"
-- **Ecosystem**: Simple life simulation with plants and animals
-- **Miniverse**: A tiny universe with its own physics and evolution
+- **Snake Game**: an AI snake that chases food (each meal raises its awareness)
+- **Game of Life**: Conway's Game of Life; above awareness 3 it seeds gliders and other patterns
+- **Particle System**: charged particles that attract and repel
+- **Virtual Reality**: a themed world (fantasy, sci-fi, historical, abstract) characters can walk into
+- **Ecosystem**: plants, herbivores and carnivores
+- **Dream**: drifting dream entities on a distorting landscape
+- **Miniverse**: galaxies, stars and planets whose civilisations develop and grow aware
+
+Characters entering a simulation more self-aware than themselves gain awareness; very aware characters raise the
+simulation's awareness in turn.
 
 ## Technical Systems
 
@@ -98,10 +112,11 @@ Behind the scenes, the simulation uses:
 
 ## How to Play
 
-1. **Observe Mode**: Watch the simulation unfold naturally
-2. **Deity Mode**: Interact with the world using deity powers
-3. **Focus Mode**: Follow specific characters or philosophical schools
-4. **Experiment Mode**: Test how different interventions affect awareness
+The simulation runs by itself; you watch, inspect and intervene:
+
+1. **Observe**: follow the world, its characters and their thought bubbles; press P to pause
+2. **Inspect**: click a character to select it (C cycles the camera between free, follow-selected and overview)
+3. **Intervene**: use the deity powers (see above), or click a meta-simulation to pause or resume it
 
 ## Controls
 
