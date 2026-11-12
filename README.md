@@ -105,22 +105,30 @@ Behind the scenes, the simulation uses:
 
 ## Controls
 
-- **WASD**: Camera movement
-- **Mouse Wheel**: Zoom in/out
-- **Left Click**: Select character or interact with world
-- **Right Click**: Open deity powers menu
-- **Space**: Pause/resume simulation
-- **T**: Toggle transcendence visualization
-- **P**: Player power activation
-- **C**: Cycle camera modes
-- **D**: Toggle debug information
+- **WASD**: Camera movement (free camera mode)
+- **Mouse Wheel** or **[ / ]**: Zoom in/out
+- **Left Click**: Select a character, or pause/resume a meta-simulation; deity power buttons along the top
+- **Right Click**: Deselect
+- **P**: Pause/resume simulation
+- **T**: Toggle transcendence information
+- **Z**: Toggle awareness levels
+- **C**: Cycle camera modes (free, follow, overview)
+- **Shift+D**: Toggle debug information
+
+## Implementation status
+
+The game loop in `main.py` runs the world (time, weather, ambient objects), character needs, memories and awareness
+growth, the meta-simulations and the character-simulation interactions. Not yet wired in: the character action
+planner (`EnhancedCharacter._decide_next_action`, so characters drift rather than walk), `character_interactions.py`
+and `event_manager.py`, and transcendence attempts. Of the deity powers only weather control has a handler; the
+others report "not implemented yet".
 
 ## Installation
 
 1. Ensure you have Python 3.8+ and Pygame 2.0+ installed
 2. Clone this repository
 3. Install dependencies: `pip install -r requirements.txt`
-4. Run the simulation: `python expanded_main.py`
+4. Run the simulation: `python main.py`
 
 ## Development Notes
 
