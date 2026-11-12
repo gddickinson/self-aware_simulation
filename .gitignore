@@ -1,0 +1,7 @@
+__pycache__/
+*.pyc
+.DS_Store
+expanded_debug.log
+savegame.json
+site/
+.pytest_cache/
