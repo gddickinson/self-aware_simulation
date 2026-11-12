@@ -1101,6 +1101,7 @@ class MetaSimulation:
         # Occasionally add new stars or planets
         if random.random() < 0.0005 and len(self.stars) < 100:
             # Add a new star
+            galaxy = None
             if random.random() < 0.3:
                 # Star in a galaxy
                 galaxy = random.choice(self.galaxies)
@@ -1123,7 +1124,8 @@ class MetaSimulation:
             }
 
             self.stars.append(new_star)
-            galaxy['stars'].append(len(self.stars) - 1)
+            if galaxy is not None:
+                galaxy['stars'].append(len(self.stars) - 1)
 
         # Occasionally add a planet to a random star
         if random.random() < 0.001 and self.stars:

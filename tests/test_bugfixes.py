@@ -76,3 +76,43 @@ def test_world_click_in_any_deity_mode_does_not_crash():
     assert deity.selected_entity_id == "a"
     texts = [m["text"] for m in deity.ui_elements["message_log"]["messages"]]
     assert any("not implemented" in t for t in texts)
+
+
+class _ScriptedRandom:
+    """Stand-in for the random module: random() replays a script (then 0.5); other draws are deterministic."""
+
+    def __init__(self, script):
+        self.script = list(script)
+
+    def random(self):
+        return self.script.pop(0) if self.script else 0.5
+
+    def uniform(self, a, b):
+        return a + (b - a) * 0.5
+
+    def randint(self, a, b):
+        return a
+
+    def randrange(self, n):
+        return 0
+
+    def choice(self, seq):
+        return seq[0]
+
+
+def test_intergalactic_star_not_added_to_a_galaxy(monkeypatch):
+    """_update_miniverse() appended every new star to galaxy['stars'], using the loop variable left over from the
+    galaxy-rotation loop when the star was placed in intergalactic space (so it joined the last galaxy)."""
+    from modules import meta_simulations
+    from modules.meta_simulations import MetaSimulation, SimulationType
+    random.seed(1)
+    sim = MetaSimulation(SimulationType.MINIVERSE, [0, 0], (350, 250), None)
+    for planet in sim.planets:
+        planet["has_life"] = False
+    n_galaxies = len(sim.galaxies)
+    # galaxy rotation checks, then "add a star" (yes), then "in a galaxy" (no: intergalactic)
+    monkeypatch.setattr(meta_simulations, "random", _ScriptedRandom([0.5] * n_galaxies + [0.0, 0.9]))
+    n_stars = len(sim.stars)
+    sim._update_miniverse(16)
+    assert len(sim.stars) == n_stars + 1
+    assert all(n_stars not in g["stars"] for g in sim.galaxies)
